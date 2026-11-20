@@ -1,0 +1,1541 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<link rel="icon" type="image/png" href="assets/memoji-icon.png">
+<link rel="apple-touch-icon" href="assets/memoji-icon.png">
+<title>Subway App 案例</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: 1280 canvas = 192 gutter | 880 content column (816 text) | sticky case-study contents rail.
+   Single committed light look, copied from the Figma "專案模板" CSS; tokens below are the exact values from that file. */
+:root{
+  --page:#FBFBFB; --ink:#121316; --ink-btn:#151618; --body:#4B5563; --label:#6B7280;
+  --muted:#BEBEBE; --chip:#F3F4F6; --line:#E5E7EB; --line-soft:#F3F4F6; --line-card:#F0F0F0; --card:#FFFFFF;
+  --bad:#E11D48; --bad-icon:#F43F5E; --good:#059669; --warn:#D97706;
+  --f-ui:'Inter','Noto Sans TC',system-ui,sans-serif;
+  --f-mono:'JetBrains Mono','Noto Sans TC',ui-monospace,monospace;
+  --f-tc:'Noto Sans TC','Inter',system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--f-ui);font-size:13px;line-height:18px;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+p,h1,h2,h3,ul{margin:0;padding:0}
+ul{list-style:none}
+svg{display:block}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* header */
+.hd{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(251,251,251,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(229,231,235,.6);padding:14px max(64px,env(safe-area-inset-right,0px)) 14px max(64px,env(safe-area-inset-left,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--page)}
+.hd-in{max-width:1152px;margin:0 auto;height:40px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.who{display:flex;align-items:center;gap:10px}
+.who b{font:700 15px/22px var(--f-mono);letter-spacing:-.375px;color:var(--ink);white-space:nowrap}
+.tag{display:inline-flex;align-items:center;height:23px;padding:2px 6px;background:var(--chip);border-radius:4px;font:500 13px/18px var(--f-mono);color:var(--body);white-space:nowrap}
+.nav{display:flex;gap:28px;font:500 13px/18px var(--f-mono);color:var(--body)}
+.nav a:first-child{font-weight:700;color:var(--ink)}
+.ctl{display:flex;align-items:center;gap:12px}
+.soc{display:flex;gap:8px}
+.ib{width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);border-radius:4px;color:var(--ink-btn);background:transparent;transition:background .15s}
+.ib:hover{background:var(--chip)}
+.vr{width:1px;height:20px;background:var(--line);flex:none}
+.ib svg{width:16px;height:16px}
+.btn{display:inline-flex;align-items:center;gap:6px;height:40px;padding:6px 16px;background:var(--ink-btn);color:var(--muted);border-radius:4px;box-shadow:0 1px 1px rgba(0,0,0,.05);font:500 13px/18.2px var(--f-mono);white-space:nowrap}
+.btn.em{height:auto;padding:10px 16px 10px 14px;color:var(--line);font:500 13px/18.2px var(--f-ui)}
+.btn.em svg{width:20px;height:20px;flex:none}
+
+/* page grid */
+.wrap{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr minmax(0,880px) 208px}
+.main{padding:60px 32px;display:flex;flex-direction:column;gap:80px;min-width:0}
+.rail{position:sticky;top:68px;align-self:start;padding:60px 16px 0 16px;margin-left:16px}
+.back{display:flex;align-items:center;gap:8px;font:500 13px/19px var(--f-mono);letter-spacing:.2px;text-transform:uppercase;color:var(--body)}
+.back svg{width:16px;height:16px}
+.toc{margin-top:28px;display:flex;flex-direction:column;gap:12px}
+.toc a{font:400 13px/18.2px var(--f-mono);color:var(--body);white-space:nowrap;width:max-content}
+.toc a.on{font-weight:500;color:var(--ink)}
+
+/* type */
+.h1{font:700 42px/50px var(--f-ui);letter-spacing:-1.05px;color:var(--ink);text-wrap:balance}
+.h2{font:500 20px/28px var(--f-tc);letter-spacing:-.132px;color:var(--ink)}
+.h3{font:500 20px/28px var(--f-mono);letter-spacing:-.132px;color:var(--muted)}
+.p{font:400 13px/18px var(--f-ui);color:var(--body)}
+.sec{display:flex;flex-direction:column;gap:16px}
+.blk{display:flex;flex-direction:column;gap:12px}
+.step{display:flex;align-items:center;gap:12px}
+.step i{width:32px;height:32px;border-radius:999px;background:var(--ink-btn);color:var(--page);display:grid;place-items:center;font:600 13px/20px var(--f-ui);font-style:normal}
+.step span{font:600 13px/20px var(--f-ui);letter-spacing:.65px;text-transform:uppercase;color:var(--body)}
+
+/* cards */
+.card{background:var(--card);border-radius:4px;padding:24px;border:1px solid var(--line-soft)}
+.card.sh{}
+.grid{display:grid;gap:6px;align-items:stretch}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.stack{display:flex;flex-direction:column;gap:6px;min-width:0}
+.t{font:500 13px/18px var(--f-ui);color:var(--ink)}
+.t.sb{font-weight:600;font-family:var(--f-tc)}
+.t.lg{font:600 16px/24px var(--f-ui)}
+.lines{display:flex;flex-direction:column;font:400 13px/18px var(--f-ui);color:var(--body)}
+.ci{display:flex;flex-direction:column;gap:6px;min-width:0}
+.bad{color:var(--bad);font:500 13px/18px var(--f-ui)}
+.mid{color:var(--warn);font:500 13px/18px var(--f-ui)}
+.ok{color:var(--good);font:500 13px/18px var(--f-ui)}
+
+/* placeholders / images */
+.ph{position:relative;width:100%;background:var(--chip);border:1px dashed #D1D5DB;border-radius:4px;overflow:hidden;display:grid;place-items:center;text-align:center;padding:8px}
+.ph>span{font:500 12px/16px var(--f-mono);color:var(--label);max-width:100%;overflow-wrap:anywhere}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;max-width:none}
+.ph.dk{background:var(--ink-btn);border-color:#3a3c42}
+.ph.ok{background:transparent;border-color:transparent}
+.ph.ok>span{display:none}
+.ph.dk>span{color:var(--muted)}
+.ph.sm{width:32px;height:32px;padding:0;flex:none}
+.ph.sm>span{display:none}
+
+/* hero */
+.meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;align-items:start}
+.meta .ci{gap:5px}
+.meta .v{font:500 13px/18.2px var(--f-mono);color:var(--ink)}
+.meta .v.ui{font-family:var(--f-ui)}
+.meta .s{font:400 13px/18.2px var(--f-ui);color:var(--body)}
+.note{margin-top:20px;font:400 13px/18px var(--f-mono);color:var(--body)}
+
+/* problem / solution */
+.ps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:56px;align-items:start}
+.ps .col{display:flex;flex-direction:column;gap:16px;min-width:0}
+.ps .head{font:500 20px/28px var(--f-tc);letter-spacing:-.132px;color:var(--ink)}
+.ps .col>.in{display:flex;flex-direction:column;gap:16px}
+.ps .txt{display:flex;flex-direction:column;gap:12px}
+.ps .txt p{font:400 13px/18px var(--f-ui);color:var(--body)}
+.li{display:flex;flex-direction:column;gap:10px;padding-top:1px}
+.li li{display:flex;gap:8px;align-items:flex-start;font:400 13px/18px var(--f-ui);color:var(--body)}
+.li svg{width:15px;height:15px;flex:none;margin-top:2px}
+.li.bd svg{color:var(--bad-icon)} .li.gd svg{color:var(--good)}
+
+/* table */
+.tbl{overflow-x:auto}
+.tbl table{width:100%;min-width:600px;border-collapse:collapse}
+.tbl th{font:600 13px/14px var(--f-mono);letter-spacing:.44px;text-transform:uppercase;color:var(--label);text-align:left;padding:12px 8px 12px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl td{font:400 13px/20px var(--f-ui);color:var(--body);padding:12px 8px 12px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl tr:last-child td{border-bottom:0}
+.tbl td.me{color:var(--good);font-weight:500}
+.tbl td.me svg{display:inline-block;width:11px;height:8px;margin-right:4px;vertical-align:0}
+.tbl td.f{font-weight:400}
+
+/* stats */
+.stat{display:flex;gap:6px}
+.stat>div{flex:1;min-width:0}
+.num{font:700 30px/36px var(--f-mono);letter-spacing:-.75px;color:var(--ink);white-space:nowrap}
+.cap{font:400 13px/18px var(--f-ui);color:var(--body)}
+.sc{display:flex;flex-direction:column;gap:16px}
+.sc .p{font-family:var(--f-mono)}
+
+/* interview */
+.iv{display:grid;grid-template-columns:minmax(0,405px) minmax(0,1fr);gap:24px;align-items:center;padding:24px}
+.qs{display:flex;flex-direction:column;gap:16px;justify-content:center}
+.q{display:flex;gap:16px;align-items:flex-start}
+.q svg{width:16px;height:16px;flex:none;margin-top:4px;color:var(--ink)}
+.q div{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0}
+.q b{font:500 13px/18px var(--f-ui);color:var(--ink)}
+.q small{font:400 13px/18px var(--f-mono);color:var(--body);text-align:right}
+
+/* persona */
+.pc{background:var(--card);border:1px solid var(--line-card);border-radius:5px;padding:24px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.pc header{border-bottom:1px solid var(--line-soft);padding:4px 0;display:flex;flex-direction:column;gap:4px}
+.pc header .r{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.pc h3{font:600 18px/26px var(--f-ui);letter-spacing:-.18px;color:#111827}
+.pc header p{font:500 15px/26px var(--f-ui);color:var(--body)}
+.pc .row{display:flex;gap:12px;align-items:flex-start}
+.pc .col{display:flex;flex-direction:column;gap:12px;min-width:0;flex:1}
+.pc .fl{display:flex;flex-direction:column;gap:10px;flex:none}
+.pc .fl .lab{font:400 16px/22px var(--f-ui);color:#636363}
+.bz{display:flex;gap:4px;align-items:flex-end}
+.bz .ph{height:42px;width:auto;padding:0;flex:none;border:0;background:transparent}
+.bz .ph>span{display:none}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;height:23px;padding:2px 6px;background:var(--chip);border-radius:4px;font:500 13px/18.2px var(--f-mono);color:var(--body);white-space:nowrap}
+.chip.dk{height:auto;padding:6px 12px;background:var(--ink-btn);color:var(--muted);box-shadow:0 1px 1px rgba(0,0,0,.05)}
+.qt{font:700 14px/21px var(--f-tc);color:var(--ink)}
+.lbl{font:600 12px/16px var(--f-ui);letter-spacing:.48px;text-transform:uppercase;color:var(--label);margin-bottom:7px}
+.bl{list-style:disc;padding-left:19.5px;font:400 13px/21.13px var(--f-mono);color:var(--body)}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pc.sec2{justify-content:space-between}
+.pc .ph.sq{width:140px;aspect-ratio:1;flex:none}
+.pc .ph.ph-mia{width:184px;aspect-ratio:1;flex:none}
+
+/* insight cards */
+.ic{display:flex;flex-direction:column;gap:12px}
+.ic .t{font-family:var(--f-tc);font-weight:600}
+.ic .d{font:400 13px/18px var(--f-tc);color:var(--body)}
+
+/* pov / quote */
+.big{font:500 20px/28px var(--f-tc);letter-spacing:-.132px;color:var(--ink)}
+.imgbox{background:var(--card);border-radius:4px;padding:12px;border:1px solid var(--line-soft)}
+
+/* cta */
+.cta{padding:160px 0;display:flex;flex-direction:column;align-items:center;gap:32px;text-align:center}
+.cta h2{font:800 48px/48px var(--f-mono);letter-spacing:-1.2px;color:var(--ink);display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;text-wrap:balance}
+.cta h2 u{text-decoration:underline}
+.cta h2 svg{width:40px;height:40px;color:var(--ink);overflow:visible}
+.cta .row{display:flex;gap:16px;align-items:center;justify-content:center;flex-wrap:wrap}
+.cta .row .ib{margin:0}
+.next{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;font:400 13px/20px var(--f-ui);color:var(--body)}
+.next svg{width:11px;height:11px}
+
+/* footer */
+.ft{padding:48px max(192px,env(safe-area-inset-right,0px)) 48px max(192px,env(safe-area-inset-left,0px))}
+.ft-in{max-width:896px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.ft-l{display:flex;flex-direction:column;gap:4px;align-items:flex-start;margin:0}
+.ft-l .r{display:flex;gap:10px;align-items:center}
+.ft-l b{font:700 20px/31px var(--f-mono);color:var(--ink)}
+.ft-l p{font:400 13px/18px var(--f-mono);color:var(--muted)}
+.ft .soc{gap:16px}
+
+
+/* interview switcher */
+.ivph img{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .15s,visibility .15s}
+.ivph img.on{opacity:1;visibility:visible;pointer-events:auto}
+.q{all:unset;box-sizing:border-box;display:flex;gap:16px;align-items:flex-start;cursor:pointer;opacity:.5;transition:opacity .15s}
+.q.on{opacity:1}
+.q:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+/* video */
+.vcard{background:#F8F8F8;border:1px solid var(--line-soft);border-radius:4px;padding:24px;display:flex;justify-content:center}
+.vp{position:relative;width:100%;max-width:490.91px;aspect-ratio:720/726;background:#F8F8F8;overflow:hidden;border-radius:2px;cursor:pointer}
+.vp video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;background:#F8F8F8;clip-path:polygon(0 5.6%,100% 5.6%,100% 92.5%,72% 92.5%,72% 93.7%,28% 93.7%,28% 92.5%,0 92.5%)}
+.vp-ui{position:absolute;inset:0;pointer-events:none;transition:opacity .2s}
+.vp.playing:not(:hover):not(:focus-within) .vp-ui{opacity:0}
+@media (hover:none){.vp.playing .vp-ui{opacity:1}}
+.vp-bar{position:absolute;left:8px;right:8px;bottom:8px;display:flex;gap:8px;align-items:flex-end;pointer-events:auto;cursor:default}
+.vb{all:unset;box-sizing:border-box;cursor:pointer;display:grid;place-items:center;width:24px;height:24px;border-radius:4px;flex:none}
+.vb svg{width:20px;height:20px}
+.vb.big{width:56px;height:32px;background:rgba(0,0,0,.9);border-radius:4px}
+.vb.big svg{width:24px;height:24px}
+.vb.sp{width:auto;padding:0 4px;color:#fff;font:700 11px/24px 'Inter',sans-serif;min-width:28px}
+.vb:focus-visible{outline:2px solid #fff;outline-offset:1px}
+.vp-ctl{flex:1;min-width:0;height:32px;background:rgba(0,0,0,.9);border-radius:4px;padding:4px 8px;display:flex;align-items:center;gap:8px}
+.vtime{color:#fff;font:500 10px/16px 'Inter',sans-serif;min-width:30px;font-variant-numeric:tabular-nums}
+#vseek{flex:1;min-width:0;height:4px;-webkit-appearance:none;appearance:none;border-radius:100px;background:linear-gradient(to right,#fff var(--p,0%),rgba(255,255,255,.2) var(--p,0%));outline-offset:6px;cursor:pointer}
+#vseek::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:#fff;border:0}
+#vseek::-moz-range-thumb{width:10px;height:10px;border-radius:50%;background:#fff;border:0}
+
+@media (max-width:1159px){
+  .wrap{grid-template-columns:minmax(0,1fr)}
+  .rail{display:none}
+  .main{max-width:880px;margin:0 auto;width:100%}
+  .ft{padding-inline:max(32px,env(safe-area-inset-left,0px))}
+}
+@media (max-width:820px){
+  .hd{padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+  .nav,.soc.top,.vr{display:none}
+  .who .tag{display:none}
+  .main{padding:32px max(16px,env(safe-area-inset-left,0px)) 32px max(16px,env(safe-area-inset-right,0px));gap:56px}
+  .h1{font-size:30px;line-height:38px;letter-spacing:-.6px}
+  .meta{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ps,.g2,.g3,.two{grid-template-columns:minmax(0,1fr)}
+  .ps{gap:40px}
+  .iv{grid-template-columns:minmax(0,1fr)}
+  .pc .row{flex-direction:column}
+  .pc .ph.ph-mia{width:140px}
+  .cta{padding:72px 0}
+  .cta h2{font-size:28px;line-height:32px}
+  .cta h2 svg{width:28px;height:28px}
+  .ft{padding-inline:max(16px,env(safe-area-inset-left,0px))}
+  .ft-in{flex-direction:column;align-items:center}
+  .ft-l{align-items:center;text-align:center}
+  .stat{flex-wrap:wrap}
+  .vcard{padding:16px}
+}
+/* CTA motion */
+.cta.pre h2 .c{display:inline-block;opacity:0;transform:translateY(.55em);filter:blur(6px)}
+.cta.pre h2 .ar{opacity:0;transform:translateX(-24px)}
+.cta.pre h2 u{text-decoration:none;background:linear-gradient(currentColor,currentColor) 0 100%/0 2px no-repeat}
+.cta.pre .row,.cta.pre .next{opacity:0;transform:translateY(16px)}
+.cta.in h2 .c{opacity:1;transform:none;filter:none;transition:opacity .6s cubic-bezier(.2,.7,.2,1),transform .6s cubic-bezier(.2,.7,.2,1),filter .6s;transition-delay:calc(var(--i)*55ms)}
+.cta.in h2 .ar{opacity:1;transform:none;transition:opacity .5s,transform .7s cubic-bezier(.2,.7,.2,1);transition-delay:calc(var(--n)*55ms + 80ms)}
+.cta.in h2 u{text-decoration:none;background-size:100% 2px;transition:background-size .7s cubic-bezier(.2,.7,.2,1);transition-delay:calc(var(--n)*55ms + 500ms)}
+.cta.in .row,.cta.in .next{opacity:1;transform:none;transition:opacity .6s,transform .6s cubic-bezier(.2,.7,.2,1);transition-delay:calc(var(--n)*55ms + 700ms)}
+.cta.in .next{transition-delay:calc(var(--n)*55ms + 820ms)}
+.cta h2 .ar svg{transition:transform .3s}
+.cta h2:hover .ar svg{transform:translateX(8px)}
+/* lightbox */
+.ph img[data-zoom]{cursor:zoom-in}
+html.lb-open{overflow:hidden}
+.lb{position:fixed;inset:0;z-index:100;background:rgba(18,19,22,.3);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);touch-action:none;overflow:hidden;opacity:0;transition:opacity .2s}
+.lb.on{opacity:1}
+.lb-stage{position:absolute;inset:0 0 88px 0;display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-left,0px)) 0 max(16px,env(safe-area-inset-right,0px));cursor:grab}
+.lb-stage.pan{cursor:grabbing}
+.lb img{max-width:none;max-height:none;object-fit:contain;transform-origin:50% 50%;will-change:transform;user-select:none;-webkit-user-drag:none;background:#fff;border-radius:4px}
+.lb-x{position:absolute;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:48px;height:48px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);display:grid;place-items:center;cursor:pointer;box-shadow:0 4px 6px -1px rgba(0,0,0,.2)}
+.lb-x svg{width:22px;height:22px}
+.lb-x:hover{background:var(--chip)}
+.ig3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:560px){.ig3{grid-template-columns:minmax(0,1fr)}}
+/* enlarge badge + video modal (shared) */
+.zb,.ph:has(>img[data-zoom])::after{position:absolute;right:12px;bottom:12px;width:48px;height:48px;border-radius:50%;background:#fff;box-shadow:0 2px 10px rgba(18,19,22,.14);opacity:0;transform:scale(.92);transition:opacity .18s,transform .18s;z-index:5}
+.ph:has(>img[data-zoom])::after{content:"";pointer-events:none;background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23121316' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7'/></svg>") center/22px no-repeat}
+.zb{display:grid;place-items:center;border:0;padding:0;color:var(--ink);cursor:zoom-in}
+.zb svg{width:22px;height:22px}
+.ph:hover:has(>img[data-zoom])::after,.vp:hover .zb,.vp:focus-within .zb,.fv-v:hover .zb,.fv-v:focus-visible .zb{opacity:1;transform:none}
+.fv-v .zb{pointer-events:none}
+.vp .zb{bottom:52px;right:8px;width:44px;height:44px}
+@media (hover:none){.zb,.ph:has(>img[data-zoom])::after{opacity:1;transform:none;width:36px;height:36px}.zb svg{width:18px;height:18px}}
+.vm{position:fixed;inset:0;z-index:110;background:rgba(18,19,22,.3);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;transition:opacity .2s}
+.vm.on{opacity:1}
+.vm-s{position:absolute;left:0;right:0;top:0;bottom:calc(150px + env(safe-area-inset-bottom,0px));display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-left,0px)) 0 max(16px,env(safe-area-inset-right,0px))}
+.vm video{display:block;max-width:100%;max-height:100%;width:auto;height:auto;background:#F8F8F8;border-radius:12px;cursor:pointer}
+.vm.clip video{clip-path:inset(0 0 6.3% 0 round 12px)}
+.vm-bar{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(82px + env(safe-area-inset-bottom,0px));width:min(720px,calc(100% - 32px));display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.9);color:#fff;border-radius:8px;padding:8px 12px}
+.vm-bar button{all:unset;box-sizing:border-box;cursor:pointer;display:grid;place-items:center;min-width:28px;height:28px;border-radius:4px;color:#fff;flex:none}
+.vm-bar button:focus-visible{outline:2px solid #fff;outline-offset:1px}
+.vm-bar svg{width:20px;height:20px}
+.vm .pa,.vm .mx{display:none}
+.vm.playing .pl{display:none}.vm.playing .pa{display:block}
+.vm.muted .mw{display:none}.vm.muted .mx{display:block}
+.vm-t{font:500 12px/16px 'JetBrains Mono',monospace;min-width:72px;font-variant-numeric:tabular-nums}
+.vm-r{flex:1;min-width:0;height:4px;accent-color:#fff;cursor:pointer}
+.vm-sp{font:700 12px/28px 'Inter',sans-serif;padding:0 4px}
+.vm .lb-x{z-index:2}
+#vmute{display:none!important}
+/* enlarge badge: same size / icon / shadow as other buttons */
+.zb,.ph:has(>img[data-zoom])::after{position:absolute;right:12px;bottom:12px;width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid var(--line);box-shadow:0 1px 1px rgba(0,0,0,.05);opacity:0;transform:scale(.92);transition:opacity .18s,transform .18s,background .15s;z-index:5;box-sizing:border-box}
+.ph:has(>img[data-zoom])::after{content:"";pointer-events:none;background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23151618' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7'/></svg>") center/16px no-repeat}
+.zb{display:grid;place-items:center;padding:0;color:var(--ink-btn);cursor:zoom-in}
+.zb:hover{background:var(--chip)}
+.zb svg{width:16px;height:16px}
+.vp .zb{bottom:52px;right:8px;width:40px;height:40px}
+@media (hover:none){.zb,.ph:has(>img[data-zoom])::after{opacity:1;transform:none;width:40px;height:40px}.zb svg{width:16px;height:16px}}
+/* video modal */
+.vn{position:fixed;inset:0;z-index:110;background:rgba(18,19,22,.3);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;transition:opacity .2s}
+.vn.on{opacity:1}
+.vn-s{position:absolute;left:0;right:0;top:0;bottom:calc(92px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;justify-content:center;padding:24px max(16px,env(safe-area-inset-left,0px)) 0 max(16px,env(safe-area-inset-right,0px))}
+.vn-c{display:flex;flex-direction:column;align-items:center;gap:12px;max-width:100%}
+.vn-f{display:flex;max-width:100%;background:#F8F8F8;border-radius:16px;overflow:hidden;line-height:0}
+.vn:not(.clip) .vn-f{--h:min(calc(100vh - 176px),calc((100vw - 32px)*1.0083),760px);height:var(--h);width:calc(var(--h)*.9917);align-items:center;justify-content:center}
+@supports (height:100dvh){.vn:not(.clip) .vn-f{--h:min(calc(100dvh - 176px - env(safe-area-inset-bottom,0px)),calc((100vw - 32px)*1.0083),760px)}}
+.vn:not(.clip) .vn-f video{height:86.8%;width:auto;max-height:none;max-width:none;aspect-ratio:1/2}
+.vn video{display:block;max-width:100%;max-height:calc(100vh - 24px - 92px - 60px);max-height:calc(100dvh - 24px - 92px - 60px - env(safe-area-inset-bottom,0px));width:auto;height:auto;background:#F8F8F8;border-radius:0;cursor:pointer}
+.vn.clip video{clip-path:polygon(0 5.6%,100% 5.6%,100% 92.5%,72% 92.5%,72% 93.7%,28% 93.7%,28% 92.5%,0 92.5%)}
+.vn-bar{display:flex;align-items:center;gap:8px;width:var(--bw,360px);max-width:calc(100vw - 32px);color:#fff}
+.vn-bar button{all:unset;box-sizing:border-box;cursor:pointer;display:grid;place-items:center;min-width:36px;height:36px;border-radius:50%;color:#fff;flex:none;transition:background .15s}
+.vn-bar button:hover{background:rgba(255,255,255,.2)}
+.vn-bar button:focus-visible{outline:2px solid #fff;outline-offset:1px}
+.vn-bar svg{width:22px;height:22px}
+.vn .pa{display:none}.vn.playing .pl{display:none}.vn.playing .pa{display:block}
+.vn-t{font:400 14px/20px 'Inter',sans-serif;min-width:84px;color:rgba(255,255,255,.88);font-variant-numeric:tabular-nums;white-space:nowrap}
+.vn-pr{position:relative;flex:1;min-width:0;height:28px;cursor:pointer;touch-action:none;--p:0}
+.vn-tr{position:absolute;left:0;right:0;top:50%;height:3px;margin-top:-1.5px;background:rgba(255,255,255,.4);border-radius:2px;overflow:hidden}
+.vn-fl{display:block;height:100%;background:#fff;transform-origin:0 50%;transform:scaleX(var(--p))}
+.vn-th{position:absolute;top:50%;left:calc(var(--p)*100%);width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.vn-sp{font:700 13px/36px 'Inter',sans-serif;padding:0 8px;border-radius:18px!important}
+.vn .lb-x{z-index:2}
+/* flow videos (4 features) */
+.fg{display:flex;flex-direction:column;gap:16px}
+.fc{display:grid;grid-template-columns:minmax(0,52%) minmax(0,1fr);gap:16px;align-items:center;min-width:0}
+.fv-v{all:unset;box-sizing:border-box;position:relative;display:flex;justify-content:center;width:100%;background:#F8F8F8;border:1px solid var(--line-soft);border-radius:4px;padding:24px 0;cursor:zoom-in}
+.fv-v video{display:block;height:clamp(280px,50vh,432px);width:auto;aspect-ratio:1/2;background:#F8F8F8;border-radius:0;object-fit:contain}
+.fv-v:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.fc-t{display:flex;flex-direction:column;gap:6px;align-items:flex-start;min-width:0}
+.fv-h{font:600 13px/18px var(--f-tc);color:var(--ink);margin:0}
+.fv-a{display:flex;gap:8px;flex-wrap:wrap}
+@media (max-width:560px){.fc{grid-template-columns:minmax(0,1fr);gap:16px}}
+/* feature rows: video left, copy right on tablet; stacked on phones; two columns on wide screens */
+.ic .ph[style*="220/176"]{max-width:184px}
+/* section menu: rail on wide screens, floating button elsewhere */
+.mn{display:none}
+@media (max-width:1159px){.mn{display:block;position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:40}}
+.mn-b{all:unset;box-sizing:border-box;width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);border-radius:4px;background:#fff;color:var(--ink-btn);box-shadow:0 1px 1px rgba(0,0,0,.05);cursor:pointer;transition:background .15s}
+.mn-b:hover{background:var(--chip)}
+.mn-b:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.mn-b svg{width:16px;height:16px}
+.mn-p{position:absolute;right:0;bottom:48px;min-width:176px;max-height:min(70vh,520px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:4px;box-shadow:0 4px 12px rgba(18,19,22,.12);padding:16px;display:flex;flex-direction:column;gap:12px;opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity .15s,transform .15s,visibility .15s}
+.mn.open .mn-p{opacity:1;visibility:visible;transform:none}
+.mn-p a{font:400 13px/18.2px var(--f-mono);color:var(--body);white-space:nowrap;width:max-content}
+.mn-p a.on{font-weight:500;color:var(--ink)}
+/* results video card: same frame as the feature cards */
+.vcard{--ch:clamp(328px,calc(50vh + 48px),480px);height:var(--ch);padding:0;overflow:hidden;align-items:center}
+.vp{width:auto;max-width:none;flex:none;height:calc(var(--ch)*1.0355)}
+.fc-t{gap:8px}
+/* insight cards stay three across on tablets */
+@media (min-width:561px){.g3:has(>.ic .ph[style*="220/176"]){grid-template-columns:repeat(3,minmax(0,1fr))}}
+/* desktop: main stays centered, section menu fixed on the right */
+@media (min-width:1024px){
+  .wrap{display:block;max-width:none}
+  .wrap>div:first-child{display:none}
+  .main{width:100%;max-width:min(880px,calc(100% - 220px));margin:0 0 0 calc(50% - (min(880px,100% - 220px) + 188px)/2)}
+  .rail{display:block;box-sizing:border-box;position:fixed;top:68px;left:calc(50% + (min(880px,100% - 220px) - 156px)/2);right:auto;width:172px;margin:0;padding:60px 16px 0;max-height:calc(100vh - 68px);overflow:auto;z-index:15}
+  .rail .back{font-weight:400;text-transform:none;letter-spacing:0}
+  .mn{display:none}
+}
+
+/* ===== type scale: desktop >=1024 / tablet 641-1023 / phone <=640 ===== */
+.h1{font:700 44px/52px var(--f-ui);letter-spacing:-1.1px}
+.h2{font:500 26px/36px var(--f-tc);letter-spacing:-.2px}
+.h3{font:500 18px/26px var(--f-mono);letter-spacing:-.1px}
+.ps .head{font:500 24px/34px var(--f-tc);letter-spacing:-.2px}
+.big{font:500 22px/32px var(--f-tc);letter-spacing:-.15px}
+.blk>.p,.ps .txt p{font:400 16px/27px var(--f-ui)}
+.p,.lines,.li li,.tbl td,.ic .d,.stat1 .sub{font:400 15px/24px var(--f-ui)}
+.t{font:500 16px/24px var(--f-ui)}
+.t.sb{font-weight:600;font-family:var(--f-tc)}
+.t.lg{font:600 18px/26px var(--f-ui)}
+.stat1 .t{font:500 15px/22px var(--f-ui)}
+.bad,.mid,.ok{font:500 14px/22px var(--f-ui)}
+.meta .v{font:500 15px/22px var(--f-mono)}
+.meta .v.ui{font-family:var(--f-ui)}
+.meta .s{font:400 14px/22px var(--f-ui)}
+.step span{font:600 14px/20px var(--f-ui);letter-spacing:.7px}
+.step i{font:600 14px/20px var(--f-ui)}
+.tag,.chip{font-size:14px;line-height:20px;height:26px}
+.btn,.btn.em{font-size:14px;line-height:20px}
+.nav,.toc a,.back,.mn-p a{font-size:14px;line-height:20px}
+.who b{font-size:16px;line-height:24px}
+.num{font-size:32px;line-height:40px}
+.cap,.stat1 .gr{font-size:14px;line-height:20px}
+.tbl th{font-size:13px;line-height:16px}
+.q b{font:500 15px/24px var(--f-ui)}
+.q small{font:400 14px/20px var(--f-mono)}
+.pc h3{font-size:20px;line-height:28px}
+.pc header p{font-size:16px;line-height:26px}
+.qt{font-size:16px;line-height:26px}
+.lbl,.lbl2{font-size:13px;line-height:18px}
+.bl{font-size:14px;line-height:22px}
+.next,.ft-l p{font-size:14px;line-height:20px}
+.fv-h{font:600 16px/24px var(--f-tc)}
+.fl-i,.lnk,.pz figcaption,.itabs button,.vtabs button{font-size:14px;line-height:20px}
+.itabs button,.vtabs button{height:28px}
+.pz figcaption b,.fl-i i{font-size:13px}
+@media (max-width:1023px){
+  .h1{font-size:38px;line-height:46px;letter-spacing:-.9px}
+  .h2{font-size:24px;line-height:34px}
+  .ps .head{font-size:22px;line-height:32px}
+  .h3{font-size:17px;line-height:24px}
+  .blk>.p,.ps .txt p{font-size:15px;line-height:25px}
+  .big{font-size:20px;line-height:30px}
+}
+@media (max-width:640px){
+  .h1{font-size:30px;line-height:38px;letter-spacing:-.6px}
+  .h2{font-size:22px;line-height:32px}
+  .ps .head{font-size:20px;line-height:30px}
+  .h3{font-size:16px;line-height:24px}
+  .blk>.p,.ps .txt p{font-size:15px;line-height:24px}
+  .p,.lines,.li li,.tbl td,.ic .d,.stat1 .sub{font-size:14px;line-height:22px}
+  .t{font-size:15px;line-height:22px}
+  .num{font-size:28px;line-height:34px}
+  .big{font-size:18px;line-height:28px}
+  .qt,.pc header p{font-size:15px;line-height:24px}
+  .fv-h{font-size:15px;line-height:22px}
+}
+.dg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px 0;align-items:start}
+/* design-result video thumbnail: only the enlarge badge */
+.vp .vp-ui{display:none!important}
+.vp{cursor:zoom-in}
+.vcard{position:relative;cursor:zoom-in}
+.vcard .zb{bottom:12px;right:12px}
+.vcard:hover .zb,.vcard:focus-within .zb{opacity:1;transform:none}
+.imgbox .ph:has(>img[data-zoom])::after{right:0;bottom:0}
+.card:not(.ic)>.ph:has(>img[data-zoom]){overflow:visible}
+.card:not(.ic)>.ph:has(>img[data-zoom])::after{right:-12px;bottom:-12px}
+/* design guide overview zoom */
+.zwrap{position:relative;cursor:zoom-in}
+.zwrap:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.zwrap::after{content:"";position:absolute;right:12px;bottom:12px;width:40px;height:40px;box-sizing:border-box;border-radius:50%;border:1px solid var(--line);box-shadow:0 1px 1px rgba(0,0,0,.05);background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23151618' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7'/></svg>") center/16px no-repeat;opacity:0;transform:scale(.92);transition:opacity .18s,transform .18s;pointer-events:none;z-index:5}
+.zwrap:hover::after,.zwrap:focus-visible::after{opacity:1;transform:none}
+@media (hover:none){.zwrap::after{opacity:1;transform:none}}
+/* interview on phones: no arrows, one quote at a time together with its photo */
+/* interview carousel: horizontal slide + pill progress dots */
+.ivph img{opacity:1;visibility:hidden;transition:transform .6s cubic-bezier(.65,0,.35,1);will-change:transform}
+.ivph img.on,.ivph img.out{visibility:visible}
+.ivph::before{content:"";position:absolute;left:0;right:0;bottom:0;height:76px;background:linear-gradient(to top,rgba(18,19,22,.4),rgba(18,19,22,0));z-index:2;pointer-events:none}
+.ivd{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);display:flex;align-items:center;z-index:3}
+.ivd-i{all:unset;box-sizing:border-box;cursor:pointer;height:24px;padding:0 4px;display:grid;place-items:center}
+.ivd-i:focus-visible{outline:2px solid #fff;outline-offset:-2px;border-radius:99px}
+.ivd-i i{display:block;position:relative;overflow:hidden;width:8px;height:8px;border-radius:99px;background:rgba(255,255,255,.65);transition:width .5s cubic-bezier(.65,0,.35,1),height .5s cubic-bezier(.65,0,.35,1),background .3s}
+.ivd-i[data-d="2"] i,.ivd-i[data-d="3"] i{width:6px;height:6px}
+.ivd-i.on i{width:44px;background:rgba(255,255,255,.4)}
+.ivd-i.on i::after{content:"";position:absolute;inset:0;border-radius:inherit;background:#fff;transform-origin:0 50%;transform:scaleX(var(--pg,0))}
+@media (prefers-reduced-motion:reduce){.ivph img,.ivd-i i{transition:none}}
+@media (max-width:820px){.q svg{display:none}.qs{display:grid;overflow:hidden}.qs .q{grid-area:1/1;min-width:0;opacity:1}}
+/* header auto-hide + numbered menu + merged footer + side-by-side short cards */
+html{--hh:68px}
+html.hd-off{--hh:0px}
+.hd{transition:transform .28s cubic-bezier(.2,.7,.2,1)}
+.hd.off{transform:translateY(-100%)}
+@media (min-width:1024px){html .rail{top:var(--hh);max-height:calc(100vh - var(--hh));transition:top .28s cubic-bezier(.2,.7,.2,1)}}
+@media (prefers-reduced-motion:reduce){.hd,html .rail{transition:none}}
+.toc a,.mn-p a{display:flex;align-items:baseline;gap:8px}
+.toc a em,.mn-p a em{font-style:normal;min-width:1ch;color:var(--muted);font-weight:500}
+.toc a.on em,.mn-p a.on em{color:var(--ink)}
+.ft{padding-top:0}
+.cta{padding:96px 0 64px}
+.ft-in{padding-top:32px;border-top:1px solid var(--line)}
+@media (max-width:820px){.cta{padding:56px 0 40px}.ft-in{padding-top:24px}}
+@media (min-width:561px){.card.ci.lr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:24px;align-items:start}}
+@media (min-width:561px) and (max-width:820px){.grid.g2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* ===== shared: case-study flow, headings, tablet gutters ===== */
+.lbl2{font:600 13px/18px var(--f-ui);letter-spacing:.48px;color:var(--label);text-transform:uppercase}
+.lnk{display:inline-flex;align-items:center;gap:6px;font:500 14px/20px var(--f-ui);color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+.flow{display:grid;grid-template-columns:minmax(0,1fr);gap:6px}
+.flow .card{display:flex;align-items:center;gap:24px;padding:20px 24px}
+.flow .lbl2{flex:none;width:176px}
+.flow .row{display:flex;flex-wrap:nowrap;gap:10px 24px;min-width:0}
+.fl-i{display:inline-flex;align-items:center;gap:8px;font:500 14px/20px var(--f-tc);color:var(--ink);white-space:nowrap}
+.fl-i i{width:24px;height:24px;border-radius:999px;background:var(--ink-btn);color:var(--page);display:grid;place-items:center;font:600 13px/16px var(--f-ui);font-style:normal;flex:none}
+.flow .prev .fl-i{color:var(--body)}
+.flow .prev .fl-i i{background:var(--chip);color:var(--body)}
+.flow a.fl-i:hover span,.flow a.lbl2:hover{text-decoration:underline}
+@media (max-width:820px){.flow .card{flex-direction:column;align-items:flex-start;gap:12px}.flow .lbl2{width:auto}.flow .row{flex-wrap:wrap}}
+.h1{text-wrap:pretty}
+@media (min-width:641px) and (max-width:1023px){
+  .main{padding-left:48px;padding-right:48px}
+  .hd{padding-left:48px;padding-right:48px}
+  .ft{padding-left:48px;padding-right:48px}
+}
+.cta h2 .rot{display:inline-grid;justify-items:start;text-align:left}
+.cta h2 .rot .w{grid-area:1/1;white-space:nowrap;opacity:0;transform:translateY(.45em);transition:opacity .45s,transform .55s cubic-bezier(.2,.7,.2,1);text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:8px}
+.cta h2 .rot .w.on{opacity:1;transform:none}
+.cta h2 .rot .w.out{opacity:0;transform:translateY(-.45em)}
+@media (prefers-reduced-motion:reduce){.cta h2 .rot .w{transition:none}}
+/* lightbox backdrop + full-phone crop for recordings */
+.lb{cursor:zoom-out}.lb-stage{cursor:zoom-out}.lb img{cursor:grab}
+.vp video,.vn.clip video{clip-path:inset(5.6% 0 6.2% 0)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.cta.pre h2 .c,.cta.pre h2 .ar,.cta.pre .row,.cta.pre .next{opacity:1;transform:none;filter:none}.cta.pre h2 u{background-size:100% 2px}}
+
+/* ===== round: footer aligned to header, typing CTA, header actions ===== */
+.ft{padding-left:max(64px,env(safe-area-inset-left,0px));padding-right:max(64px,env(safe-area-inset-right,0px))}
+.ft-in{max-width:1152px}
+@media (min-width:641px) and (max-width:1023px){.ft{padding-left:48px;padding-right:48px}}
+@media (max-width:640px){.ft{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}}
+@media (min-width:641px) and (max-width:820px){.hd{padding-left:48px;padding-right:48px}}
+.btn svg.dl{width:16px;height:16px;flex:none}
+.cta h2 .rot{display:inline-flex;align-items:center;justify-content:flex-start;min-width:4.1em;text-align:left}
+.cta h2 .rot .tw{white-space:pre}
+.cta h2 .rot .sc{font-family:var(--f-mono);font-weight:700;display:inline-block;width:1em;text-align:center}
+.cta h2 .rot .caret{display:inline-block;width:3px;height:.9em;margin-left:4px;background:currentColor;animation:cblink 1s steps(1) infinite}
+@keyframes cblink{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.cta h2 .rot .caret{display:none}}
+
+/* ===== footer side-project links, hover preview, cursor label ===== */
+.ft-in{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px 48px;align-items:center}
+a.ft-l{color:inherit;border-radius:4px}a.ft-l:hover b{text-decoration:underline;text-underline-offset:4px}
+.ft-sp{display:flex;align-items:center;gap:8px 20px;flex-wrap:wrap}
+.ft-sp .lbl2{font-size:12px}
+.ft-sp a{display:inline-flex;align-items:baseline;gap:6px;font:500 14px/20px var(--f-ui);color:var(--ink);border-bottom:1px dashed var(--line);padding-bottom:2px}
+.ft-sp a:hover{border-bottom-color:var(--ink)}
+.ft-sp .yr{font:500 12px/16px var(--f-mono);color:var(--label)}
+@media (max-width:820px){.ft-in{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}.ft-sp{justify-content:center}}
+a.who{color:inherit}
+.pv,.cur{position:fixed;left:0;top:0;z-index:70;pointer-events:none;will-change:transform}
+.pv>div{width:240px;aspect-ratio:1;border-radius:10px;overflow:hidden;position:relative;background:var(--chip);box-shadow:0 12px 32px rgba(18,19,22,.18),0 0 0 1px rgba(18,19,22,.06);opacity:0;transform:scale(.88) rotate(-2deg);transform-origin:0 50%;transition:opacity .18s,transform .25s cubic-bezier(.2,.7,.2,1)}
+.pv.on>div{opacity:1;transform:none}
+.pv img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pv .cap{position:absolute;left:0;right:0;bottom:0;padding:28px 14px 12px;background:linear-gradient(to top,rgba(18,19,22,.62),rgba(18,19,22,0));color:#fff;display:flex;flex-direction:column;gap:2px;text-align:left}
+.pv .cap b{font:600 17px/22px var(--f-ui)}.pv .cap small{font:500 12px/16px var(--f-mono);opacity:.85}
+.cur>div{display:inline-flex;align-items:center;gap:8px;padding:9px 12px 9px 14px;border-radius:8px;background:#121316;color:#fff;font:500 14px/20px var(--f-ui);white-space:nowrap;opacity:0;transform:scale(.85);transform-origin:0 0;transition:opacity .15s,transform .2s cubic-bezier(.2,.7,.2,1)}
+.cur.on>div{opacity:1;transform:none}
+.cur svg{width:14px;height:14px;color:#86EFAC}
+@media (prefers-reduced-motion:reduce){.pv>div,.cur>div{transition:opacity .1s}}
+.cur>div{border-radius:4px}
+
+/* language toggle */
+.ib.lang{all:unset;box-sizing:border-box;width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);border-radius:4px;font:600 14px/1 var(--f-ui);color:var(--ink-btn);cursor:pointer;transition:background .15s}
+.ib.lang:hover{background:var(--chip)}.ib.lang:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+html[lang="en"] .h1,html[lang="en"] .h2{letter-spacing:-.4px}
+html[lang="en"] .cta h2 .rot{min-width:7.4em}
+
+/* ===== lang toggle without border; hamburger + menu panel (≤820px) ===== */
+.ib.lang{border:0}
+.ib.hb{display:none}
+@media (max-width:820px){
+  .ctl .ib:not(.lang):not(.hb),.ctl .btn{display:none}
+  .ib.hb{display:grid;all:unset;box-sizing:border-box;width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);border-radius:4px;color:var(--ink-btn);cursor:pointer;background:var(--card)}
+  .ib.hb svg{width:20px;height:20px}
+}
+.mnav-bd{position:fixed;inset:0;z-index:90;background:rgba(18,19,22,.28);opacity:0;transition:opacity .35s}
+.mnav-bd.on{opacity:1}
+.mnav{position:fixed;z-index:95;top:calc(12px + env(safe-area-inset-top,0px));right:max(12px,env(safe-area-inset-right,0px));width:min(380px,calc(100vw - 24px));max-height:calc(100vh - 24px);overflow:auto;box-sizing:border-box;padding:24px 28px 28px;border-radius:12px;background:var(--page);box-shadow:0 18px 50px rgba(18,19,22,.22),0 0 0 1px rgba(18,19,22,.06);transform-origin:calc(100% - 28px) 28px;transform:scale(.15);opacity:0;transition:transform .55s cubic-bezier(.7,0,.2,1),opacity .3s}
+.mnav.on{transform:none;opacity:1}
+.mnav-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.mnav-lbl{font:400 15px/20px var(--f-ui);color:var(--label)}
+.mnav-x{all:unset;box-sizing:border-box;width:40px;height:40px;margin-right:-8px;display:grid;place-items:center;border-radius:4px;color:var(--ink);cursor:pointer}
+.mnav-x:hover{background:var(--chip)}.mnav-x:focus-visible{outline:2px solid var(--ink)}
+.mnav-x svg{width:24px;height:24px}
+.mnav-ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.mnav-ul a{display:flex;align-items:center;justify-content:space-between;font:700 40px/1.2 var(--f-tc);letter-spacing:-.02em;color:var(--ink);padding:2px 0}
+.mnav-ul a[aria-current="page"]{color:#BEBEBE}
+.mnav-ul a i{width:10px;height:10px;border-radius:50%;background:var(--ink)}
+.mnav-ul a:hover span{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+.mnav-hr{border:0;border-top:1px solid var(--line);margin:28px 0 24px}
+.mnav-soc{display:flex;gap:10px;margin-bottom:12px}
+.mnav-soc .ib{width:52px;height:52px;border-radius:6px}.mnav-soc .ib svg{width:22px;height:22px}
+.mnav-mail{display:grid;place-items:center;height:52px;border-radius:6px;background:var(--ink-btn);color:#fff;font:500 16px/1 var(--f-ui)}
+.mnav .mnav-ul li,.mnav .mnav-hr,.mnav .mnav-soc,.mnav .mnav-mail,.mnav .mnav-top{opacity:0;transform:translateY(10px);transition:opacity .3s,transform .4s cubic-bezier(.2,.8,.2,1)}
+.mnav.on .mnav-top{opacity:1;transform:none;transition-delay:.18s}
+.mnav.on .mnav-ul li{opacity:1;transform:none}
+.mnav.on .mnav-ul li:nth-child(1){transition-delay:.22s}.mnav.on .mnav-ul li:nth-child(2){transition-delay:.27s}.mnav.on .mnav-ul li:nth-child(3){transition-delay:.32s}.mnav.on .mnav-ul li:nth-child(4){transition-delay:.37s}
+.mnav.on .mnav-hr,.mnav.on .mnav-soc,.mnav.on .mnav-mail{opacity:1;transform:none;transition-delay:.42s}
+@media (prefers-reduced-motion:reduce){.mnav,.mnav *{transition:opacity .15s!important;transform:none!important}}
+html[lang="en"] .mnav-ul a{font-family:var(--f-ui)}
+.cta h2 .rot .sc{width:auto;display:inline;letter-spacing:.02em}
+
+/* header nav hover + dark button hover */
+.nav{gap:4px}
+.nav a{display:inline-flex;align-items:center;height:36px;padding:0 12px;border-radius:4px;transition:background .15s,color .15s}
+.nav a:hover{background:var(--chip);color:var(--ink)}
+.nav a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.btn,.mnav-mail{transition:background .15s,color .15s,transform .15s}
+.btn:not(.ghost):hover,.mnav-mail:hover{background:#34363B;color:#fff}
+.btn:not(.ghost):active,.mnav-mail:active{background:#000;transform:translateY(1px)}
+.btn.em:hover{color:#fff}
+/* CTA + footer buttons: same 8px gap as the hero buttons */
+.cta .row{gap:8px}
+.ft .soc{gap:8px}
+
+/* dark buttons: background stays, text + icon turn pure white, icon moves */
+.btn:not(.ghost):hover,.btn:not(.ghost):active,.mnav-mail:hover,.mnav-mail:active{background:var(--ink-btn);color:#fff;transform:none}
+.btn.em:hover{color:#fff}
+.btn svg{transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.btn:not(.ghost):hover svg{color:#fff}
+.btn:not(.ghost):hover svg:has(use[href="#i-dl"]),.btn:not(.ghost):hover svg:has(use[href="#i-down"]){animation:btnbob .8s cubic-bezier(.45,0,.55,1) infinite}
+.btn:not(.ghost):hover svg:has(use[href="#i-arr"]){transform:translate(2px,-2px)}
+.btn:not(.ghost):hover svg:has(use[href="#i-mail20"]){animation:btnwig .7s cubic-bezier(.45,0,.55,1) infinite}
+@keyframes btnbob{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
+@keyframes btnwig{0%,100%{transform:rotate(0)}25%{transform:rotate(-10deg)}75%{transform:rotate(10deg)}}
+@media (prefers-reduced-motion:reduce){.btn:hover svg{animation:none!important}}
+
+/* animated Memoji avatar */
+.av{width:32px;height:32px;border-radius:50%;object-fit:cover;background:#fff;box-shadow:0 0 0 1px var(--line);flex:none}
+.ft-l .r .av{width:44px;height:44px}
+.who{gap:10px}
+
+/* Memoji: no background, no ring */
+.av{border-radius:0;background:transparent;box-shadow:none;object-fit:contain;mix-blend-mode:multiply}
+.ft-in{grid-template-columns:minmax(0,1fr)}
+</style>
+
+<!-- Icons (inline) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-ig" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1.442C10.136 1.442 10.3893 1.45 11.2333 1.48867C13.4013 1.58733 14.414 2.616 14.5127 4.768C14.5513 5.61133 14.5587 5.86467 14.5587 8.00067C14.5587 10.1373 14.5507 10.39 14.5127 11.2333C14.4133 13.3833 13.4033 14.414 11.2333 14.5127C10.3893 14.5513 10.1373 14.5593 8 14.5593C5.864 14.5593 5.61067 14.5513 4.76733 14.5127C2.594 14.4133 1.58667 13.38 1.488 11.2327C1.44933 10.3893 1.44133 10.1367 1.44133 8C1.44133 5.864 1.45 5.61133 1.488 4.76733C1.58733 2.616 2.59733 1.58667 4.76733 1.488C5.61133 1.45 5.864 1.442 8 1.442V1.442M8 0C5.82733 0 5.55533 0.00933333 4.702 0.048C1.79667 0.181333 0.182 1.79333 0.0486667 4.70133C0.00933333 5.55533 0 5.82733 0 8C0 10.1727 0.00933333 10.4453 0.048 11.2987C0.181333 14.204 1.79333 15.8187 4.70133 15.952C5.55533 15.9907 5.82733 16 8 16C10.1727 16 10.4453 15.9907 11.2987 15.952C14.2013 15.8187 15.82 14.2067 15.9513 11.2987C15.9907 10.4453 16 10.1727 16 8C16 5.82733 15.9907 5.55533 15.952 4.702C15.8213 1.79933 14.2073 0.182 11.2993 0.0486667C10.4453 0.00933333 10.1727 0 8 0V0M8 3.892C5.73133 3.892 3.892 5.73133 3.892 8C3.892 10.2687 5.73133 12.1087 8 12.1087C10.2687 12.1087 12.108 10.2693 12.108 8C12.108 5.73133 10.2687 3.892 8 3.892V3.892M8 10.6667C6.52733 10.6667 5.33333 9.47333 5.33333 8C5.33333 6.52733 6.52733 5.33333 8 5.33333C9.47267 5.33333 10.6667 6.52733 10.6667 8C10.6667 9.47333 9.47267 10.6667 8 10.6667V10.6667M12.2707 2.77C11.74 2.77 11.31 3.2 11.31 3.73C11.31 4.26 11.74 4.69 12.2707 4.69C12.8007 4.69 13.23 4.26 13.23 3.73C13.23 3.2 12.8007 2.77 12.2707 2.77V2.77"/></symbol>
+    <symbol id="i-in" viewBox="0 0 16 16"><path fill="currentColor" d="M12.6667 0H3.33333C1.49267 0 0 1.49267 0 3.33333V12.6667C0 14.5073 1.49267 16 3.33333 16H12.6667C14.508 16 16 14.5073 16 12.6667V3.33333C16 1.49267 14.508 0 12.6667 0V0M5.33333 12.6667H3.33333V5.33333H5.33333V12.6667V12.6667M4.33333 4.488C3.68933 4.488 3.16667 3.96133 3.16667 3.312C3.16667 2.66267 3.68933 2.136 4.33333 2.136C4.97733 2.136 5.5 2.66267 5.5 3.312C5.5 3.96133 4.978 4.488 4.33333 4.488V4.488M13.3333 12.6667H11.3333V8.93067C11.3333 6.68533 8.66667 6.85533 8.66667 8.93067V12.6667H6.66667V5.33333H8.66667V6.51C9.59733 4.786 13.3333 4.65867 13.3333 8.16067V12.6667V12.6667"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 16 16"><path fill="currentColor" d="M2.8001 12.8C2.47788 12.8 2.19732 12.6805 1.95843 12.4416C1.71954 12.2027 1.6001 11.9222 1.6001 11.6V4.39995C1.6001 4.07773 1.71954 3.79717 1.95843 3.55828C2.19732 3.3194 2.47788 3.19995 2.8001 3.19995H13.2001C13.5301 3.19995 13.8126 3.3194 14.0476 3.55828C14.2826 3.79717 14.4001 4.07773 14.4001 4.39995V11.6C14.4001 11.9222 14.2826 12.2027 14.0476 12.4416C13.8126 12.6805 13.5301 12.8 13.2001 12.8H2.8001ZM13.2001 5.81662L8.3151 8.62162C8.26065 8.65162 8.20843 8.67495 8.15843 8.69162C8.10843 8.70828 8.05565 8.71662 8.0001 8.71662C7.94454 8.71662 7.89454 8.70828 7.8501 8.69162C7.80565 8.67495 7.7561 8.65162 7.70143 8.62162L2.8001 5.81662V11.6H13.2001V5.81662ZM8.0001 7.38329L13.1834 4.39995H2.83343L8.0001 7.38329ZM2.8001 5.60162V5.75145V4.87495V4.88328V4.39995V4.88245V4.87495V5.75295V5.60295V11.6V5.60162Z"/></symbol>
+    <symbol id="i-mail20" viewBox="0 0 20 20"><path fill="currentColor" d="M3.5 16C3.0875 16 2.73438 15.8531 2.44063 15.5592C2.14688 15.2653 2 14.9119 2 14.4992V5.49417C2 5.08139 2.14688 4.72917 2.44063 4.4375C2.73438 4.14583 3.0875 4 3.5 4H16.5C16.9125 4 17.2656 4.14694 17.5594 4.44083C17.8531 4.73472 18 5.08806 18 5.50083V14.5058C18 14.9186 17.8531 15.2708 17.5594 15.5625C17.2656 15.8542 16.9125 16 16.5 16H3.5ZM10 11L3.5 7.27083V14.5H16.5V7.27083L10 11ZM10 9.22917L16.5 5.5H3.5L10 9.22917ZM3.5 7.27083V5.5V14.5V7.27083Z"/></symbol>
+    <symbol id="i-dl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></symbol>
+    <symbol id="i-be" viewBox="0 0 24 24"><path fill="currentColor" d="M8.2 11.3c.9-.4 1.4-1.1 1.4-2.1 0-2-1.5-2.7-3.3-2.7H1.5v11h5c1.9 0 3.7-.9 3.7-3 0-1.3-.6-2.3-2-2.7zM3.7 8.3h2.1c.8 0 1.5.2 1.5 1.1 0 .8-.6 1.1-1.3 1.1H3.7V8.3zm2.3 7.4H3.7v-3h2.4c1 0 1.6.4 1.6 1.5s-.8 1.5-1.7 1.5zM15.4 7.1h4.9v1.3h-4.9zm2.6 2.3c-2.4 0-4 1.8-4 4.1 0 2.4 1.5 4.1 4 4.1 1.9 0 3.1-.9 3.7-2.7h-1.9c-.2.7-1 1-1.7 1-1.3 0-2-.8-2-2h5.7c.1-2.6-1.3-4.5-3.8-4.5zm-1.9 3.4c.1-1 .8-1.7 1.8-1.7 1.1 0 1.6.6 1.7 1.7h-3.5z"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></symbol>
+    <symbol id="i-ck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-tick" viewBox="0 0 11 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4.2 4 7 10 1"/></symbol>
+    <symbol id="i-ar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+    <symbol id="i-arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></symbol>
+    <symbol id="i-big" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20h26"/><path d="m22 10 10 10-10 10"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  </defs>
+</svg>
+
+<header class="hd">
+  <div class="hd-in">
+    <a class="who" href="../" data-int aria-label="回到作品集主頁"><img class="av" src="assets/memoji.gif" alt=""><b>Liya Lin</b><span class="tag">產品設計師</span></a>
+    <nav class="nav" aria-label="網站導覽"><a href="../#work" data-int>作品</a><a href="../about/" data-int>關於</a></nav>
+    <div class="ctl">
+      <button type="button" class="ib lang" id="lang" aria-label="Switch to English" title="Switch to English">EN</button>
+      <a class="ib" href="mailto:s110413336@student.nqu.edu.tw" aria-label="寄信給我" title="寄信給我"><svg><use href="#i-mail"/></svg></a>
+      <a class="btn" href="https://drive.google.com/file/d/1-wLjHsYRSE2mXcOq1PzXmTIqzU0RvRiD/view?usp=sharing" target="_blank" rel="noopener"><svg class="dl"><use href="#i-dl"/></svg>下載履歷</a>
+      <button type="button" class="ib hb" id="hb" aria-label="開啟選單" aria-expanded="false" aria-controls="mnav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 9h14M5 15h14"/></svg></button>
+    </div>
+  </div>
+</header>
+<div class="mnav-bd" id="mnavbd" hidden></div>
+<nav class="mnav" id="mnav" aria-label="網站選單" hidden>
+  <div class="mnav-top"><span class="mnav-lbl">Liya 的作品集</span><button type="button" class="mnav-x" id="mnavx" aria-label="關閉選單"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <ul class="mnav-ul"><li><a href="../" data-int><span>首頁</span></a></li><li><a href="../#work" data-int aria-current="page"><span>作品</span><i></i></a></li><li><a href="../about/" data-int><span>關於</span></a></li><li><a href="https://drive.google.com/file/d/1-wLjHsYRSE2mXcOq1PzXmTIqzU0RvRiD/view?usp=sharing" target="_blank" rel="noopener"><span>履歷</span></a></li></ul>
+  <hr class="mnav-hr">
+  <div class="mnav-soc"><a class="ib" href="https://www.linkedin.com/in/liya-lin-a4681624b/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg><use href="#i-in"/></svg></a><a class="ib" href="https://www.instagram.com/lucky_cat_lifestyle/" target="_blank" rel="noopener" aria-label="Instagram"><svg><use href="#i-ig"/></svg></a><a class="ib" href="https://www.behance.net/a2200452eded" target="_blank" rel="noopener" aria-label="Behance"><svg><use href="#i-be"/></svg></a></div>
+  <a class="mnav-mail" href="mailto:s110413336@student.nqu.edu.tw">寄信給我</a>
+</nav>
+
+<div class="wrap">
+  <div></div>
+  <main class="main">
+
+    <!-- Overview -->
+    <section id="overview" class="sec" style="gap:32px">
+      <h1 class="h1">透過客製化熱量平衡與狀態即時化，重塑現代外食族無負擔的點餐體驗</h1>
+      <div class="ph dk" style="aspect-ratio:1224/684"><span>Subway App 案例封面<br>assets/01-cover.png</span><img src="assets/01-cover.png" alt="Subway App 案例封面" onerror="this.remove()"></div>
+      <div>
+        <div class="meta">
+          <div class="ci"><span class="tag" style="align-self:flex-start">角色</span><div class="v ui">UX/UI 設計師</div><div class="s">獨立主導端到端設計</div></div>
+          <div class="ci"><span class="tag" style="align-self:flex-start">範圍</span><div class="v ui">競爭分析、顧客探索、人物誌、資訊架構、行動裝置原型設計</div></div>
+          <div class="ci"><span class="tag" style="align-self:flex-start">工具</span><div class="v">Figma、Notion、Slack、Miro、Google Meet</div></div>
+          <div class="ci"><span class="tag" style="align-self:flex-start">年份</span><div class="v ui">2022 (4 個月)</div></div>
+        </div>
+        
+      </div>
+    </section>
+
+    <!-- Problem vs Solution -->
+    <section id="problem" class="ps">
+      <div class="col">
+        <h3 class="h3">/* 問題 */</h3>
+        <div class="in">
+          <p class="h2">線下實體數位化轉型遲滯，無法跟上現代人需求</p>
+          <div class="txt">
+            <p>Subway 在 2010 年成為全世界最多連鎖店的三明治品牌。隨著數位時代興起及顧客飲食習慣的改變，「新鮮」和「健康」已經不是顧客唯一關心的部分。</p>
+            <p>當代外食族生活節奏緊湊且高度注重飲食健康，在臨櫃點餐或傳統點單時面臨三大關鍵斷點：</p>
+            <ul class="li bd">
+              <li><svg><use href="#i-x"/></svg><span>選擇障礙焦慮：客製化步驟多達 6 步，隊伍後方凝視造成臨櫃壓力。</span></li>
+              <li><svg><use href="#i-x"/></svg><span>熱量資訊斷層：缺乏即時累計，無法在美味與體態管理間取得平衡。</span></li>
+              <li><svg><use href="#i-x"/></svg><span>門市現況黑盒子：現場缺料或尖峰排隊無從得知，撲空造成強烈挫折。</span></li>
+            </ul>
+          </div>
+          <p class="bad">目標摩擦點：嚴重性高</p>
+        </div>
+      </div>
+      <div class="col">
+        <h3 class="h3">/* 解決方案 */</h3>
+        <div class="in">
+          <p class="h2">以即時熱量回饋與備餐透明化，建構「自適應線上點餐生態」</p>
+          <div class="txt">
+            <p>打造 Subway iOS 點餐系統，把複雜的客製化流程解構為清晰引導，並賦予使用者對自身營養攝取與取餐節奏的掌控感。</p>
+            <p>透過提供餐點推薦與熱量顯示，讓使用者在整個訂餐過程中能放心且快速完成點餐，有個無憂無慮挖掘美食、平衡罪惡感的點餐經驗。</p>
+            <ul class="li gd">
+              <li><svg><use href="#i-ck"/></svg><span>即時客製化熱量條：配料增減隨時重算，動態色條呈現警戒與平衡。</span></li>
+              <li><svg><use href="#i-ck"/></svg><span>智慧餐點需求推薦：以「增肌/低碳/美味不忌口」情境快速切入。</span></li>
+              <li><svg><use href="#i-ck"/></svg><span>門市人潮與庫存可視化：即時標註備餐等待分鐘數與食材售完預警。</span></li>
+              <li><svg><use href="#i-ck"/></svg><span>色彩代碼快速取餐：取餐單採用雙色塊與顯著編號，店員 3 秒核對。</span></li>
+            </ul>
+          </div>
+          <p class="ok">設計假設：在可用性驗證中驗證</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h3 class="h3">/* 流程 */</h3>
+      <div class="blk"><h2 class="h2">本案研究的流程</h2><p class="p">本案分為上下兩篇。本篇包含探索、洞察、問題定義＆發想與原型；若想查看易用性測試、迭代後原型與學習與挑戰，請<a class="lnk" href="../subway-usability/" data-int>點擊此處</a>。</p></div>
+      <div class="flow">
+        <div class="card"><span class="lbl2" style="color:var(--ink)">上篇・研究＆設計（本頁）</span><div class="row">
+          <a class="fl-i" href="#discover"><i>1</i><span>探索</span></a>
+          <a class="fl-i" href="#insight"><i>2</i><span>洞察</span></a>
+          <a class="fl-i" href="#define"><i>3</i><span>問題定義＆發想</span></a>
+          <a class="fl-i" href="#prototype"><i>4</i><span>原型</span></a></div></div>
+        <div class="card prev"><a class="lbl2" href="../subway-usability/" data-int>下篇・易用性測試</a><div class="row">
+          <a class="fl-i" href="../subway-usability/#user-test" data-int><i>5</i><span>易用性測試</span></a>
+          <a class="fl-i" href="../subway-usability/#iterated" data-int><i>6</i><span>迭代後原型</span></a>
+          <a class="fl-i" href="../subway-usability/#learnings" data-int><i>7</i><span>學習與挑戰</span></a></div></div>
+      </div>
+    </section>
+
+    <!-- STEP 1 探索 -->
+    <div id="discover" class="step"><i>1</i><span>探索</span></div>
+
+    <section class="sec">
+      <div class="blk"><h2 class="h2">設計人們願意使用的線上點餐服務</h2><p class="p">這階段我以顧客與市場探索幫助我完成以下目標：</p></div>
+      <div class="grid g2">
+        <div class="card ci"><span class="t">市場探索</span><div class="lines"><span>線上平台的介面設計</span><span>競爭者分析</span></div></div>
+        <div class="card ci"><span class="t">顧客探索</span><div class="lines"><span>了解目標族群有哪些</span><span>驗證初步假設</span><span>了解外食影響因素</span><span>線上平台的體驗感受</span></div></div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h3 class="h3">/* 市場調查 */</h3>
+      <div class="blk"><h2 class="h2">我可以做得更好嗎？</h2><p class="p">藉由販賣同商品的平台與同為速食的專賣平台作競爭者分析，分別進行認知走查與易用性調查，釐清設計目標是否幫助使用者輕鬆解決問題，同時確認既有的解決方式。深入分析台灣主流外送平台與餐飲直營應用程式，歸納出當前市場在「高度客製化」與「進度掌握」上的系統性缺口。</p></div>
+      <div class="grid g2">
+        <div class="card sc">
+          <div style="display:flex;gap:6px">
+            <div class="ph sm" title="外送聚合應用程式圖示 1"><img src="assets/02-audit-delivery-1.png" alt="" onerror="this.remove()"></div>
+            <div class="ph sm" title="外送聚合應用程式圖示 2"><img src="assets/02-audit-delivery-2.png" alt="" onerror="this.remove()"></div>
+            <div class="ph sm" title="外送聚合應用程式圖示 3"><img src="assets/02-audit-delivery-3.png" alt="" onerror="this.remove()"></div>
+          </div>
+          <p class="t lg">外送聚合應用程式</p>
+          <div class="ci" style="gap:12px">
+            <div class="ci"><span class="t">斷點 1：滑動方向與介面階層不一致</span><span class="p">水平橫滑推薦與垂直直滑選單穿插，導致客製化流程（選麵包、蔬菜、醬料）在長表單中被截斷，跳出率高。</span></div>
+            <div class="ci"><span class="t">斷點 2：缺乏營養與食材標示細節</span><span class="p">僅以純文字核取方塊條列配料，無法看到醬料卡路里或鈉含量，對控糖或健身族群極不友善。</span></div>
+          </div>
+          <p class="bad">客製化完整度：低（僅限單選/複選表單）</p>
+        </div>
+        <div class="card sc">
+          <div style="display:flex;gap:6px">
+            <div class="ph sm" title="直營品牌專賣應用程式圖示 1"><img src="assets/03-audit-brand-1.png" alt="" onerror="this.remove()"></div>
+            <div class="ph sm" title="直營品牌專賣應用程式圖示 2"><img src="assets/03-audit-brand-2.png" alt="" onerror="this.remove()"></div>
+            <div class="ph sm" title="直營品牌專賣應用程式圖示 3"><img src="assets/03-audit-brand-3.png" alt="" onerror="this.remove()"></div>
+          </div>
+          <p class="t lg">直營品牌專賣應用程式</p>
+          <div class="ci" style="gap:12px">
+            <div class="ci"><span class="t">斷點 1：無法掌握門市即時製作負載</span><span class="p">訂單送出後僅顯示預估「約 15 分鐘」，無法即時得知店內正處於尖峰或現場已無某項特殊麵包。</span></div>
+            <div class="ci"><span class="t">斷點 2：預約機制僵化與取餐核對慢</span><span class="p">到店後仍需尋找收據或報手機末三碼，在嘈雜人潮中常常造成店員翻找餐點與使用者等候的雙重延遲。</span></div>
+          </div>
+          <p class="mid">透明度與狀態即時回饋：中等（定時刷新，缺乏微狀態）</p>
+        </div>
+      </div>
+      <div class="card tbl">
+        <table>
+          <thead><tr><th>維度</th><th>外送聚合應用程式</th><th>直營品牌專賣應用程式</th><th>Subway 設計案（本案）</th></tr></thead>
+          <tbody>
+            <tr><td>客製化步驟指引</td><td>長表單核選（易漏選）</td><td>步驟分頁（稍嫌冗長）</td><td class="me"><svg><use href="#i-tick"/></svg>步驟導覽＋即時動態條</td></tr>
+            <tr><td>熱量/營養即時回饋</td><td>無（僅靜態熱量文字）</td><td>無（需另外查營養表）</td><td class="me"><svg><use href="#i-tick"/></svg>隨選隨增減（即時數值）</td></tr>
+            <tr><td>取餐識別與防呆</td><td>訂單號碼純文字</td><td>條碼 / 取餐號</td><td class="me"><svg><use href="#i-tick"/></svg>色彩編碼＋大字號動態單</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h3 class="h3">/* 顧客探索 */</h3>
+      <h2 class="h2">線上點餐需提供哪些服務來提升造訪率？</h2>
+      <div class="card ci lr"><span class="t">初步假設：如果提供下列服務，消費者會更頻繁造訪 Subway 平台</span><div class="lines"><span>提供餐點熱量供參考</span><span>明確的餐點等候時間</span><span>店家、餐點現況（供應餐點、人潮、等候時間）</span><span>趨勢與話題的品牌認同度（新商品、聯名商品）</span></div></div>
+    </section>
+
+    <section class="sec">
+      <h3 class="h3">/* 問卷洞察 */</h3>
+      <div class="blk"><h2 class="h2">篩選目標族群與了解消費者的飲食習慣</h2><p class="p">以 Google 線上問卷回收 80 份質性與量化混合問卷，收集基本資料、外食頻率、考量因素及購買方式，同時了解線上訂餐系統的使用因素與痛點。</p></div>
+      <div class="grid g3">
+        <div class="card sc"><span class="t">購買方式</span>
+          <div class="stat"><div><div class="num">35%</div><div class="cap">手機點餐</div></div><div><div class="num">57.5%</div><div class="cap">到店購買</div></div></div>
+          <p class="p" style="font-family:var(--f-mono)">次級研究發現手機點餐有成長趨勢，Subway App 有發展的必要</p></div>
+        <div class="card sc"><span class="t">考量因素</span>
+          <div class="stat"><div><div class="num">85%</div><div class="cap">美味度</div></div><div><div class="num">75%</div><div class="cap">價格</div></div></div>
+          <p class="p" style="font-family:var(--f-mono)">美味度與 Subway 客戶主要購買原因相符</p></div>
+        <div class="card sc"><span class="t">困擾</span>
+          <div class="stat"><div><div class="num">77.5%</div><div class="cap">選擇障礙</div></div><div><div class="num">35%</div><div class="cap">時間無法掌握</div></div></div>
+          <p class="p" style="font-family:var(--f-mono)">線上點餐產品可以切入的服務內容</p></div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h3 class="h3">/* 使用者訪談 */</h3>
+      <div class="blk"><h2 class="h2">你能告訴我你購買 Subway 的過程嗎？</h2><p class="p">透過問卷邀請了 5 位對購買 Subway 具有不同熟悉度的人進行訪談，數據揭示了強烈的需求矛盾：渴望方便，卻飽受點餐壓力與健康焦慮折磨。</p></div>
+      <div class="grid g3 ig3">
+        <div class="card ci"><span class="t">目標族群</span><div class="lines"><span>每週外食 6 天以上</span><span>重視健康與美味度</span><span>15~29 歲女性</span><span>購買過 Subway</span></div></div>
+        <div class="card ci"><span class="t">訪談目標</span><div class="lines"><span>了解挑選餐點的考量因素和過程</span><span>揭示人們可能面臨的常見痛點</span><span>如何使用應用程式或網站幫助他們實現目標</span></div></div>
+        <div class="card ci"><span class="t">操作方式</span><div class="lines"><span>實際操作：於店面或線上購買</span><span>微表情觀察：追問當下行為與情緒</span><span>開放式問答：對現有管道的想法與痛處</span></div></div>
+      </div>
+      <div class="card iv">
+        <div class="ph ivph" style="aspect-ratio:897/876"><span>訪談畫面</span>
+          <img class="on" data-k="carina" src="assets/04-interview-carina.png" alt="訪談 Carina" onerror="this.remove()">
+          <img data-k="mei" src="assets/04-interview-mei.png" alt="訪談 Mei" onerror="this.remove()">
+          <img data-k="sinny" src="assets/04-interview-sinny.png" alt="訪談 Sinny" onerror="this.remove()">
+          <img data-k="wen" src="assets/04-interview-wen.png" alt="訪談 Wen" onerror="this.remove()">
+        </div>
+        <div class="qs" id="qs">
+          <button type="button" class="q on" data-k="carina"><svg><use href="#i-ar"/></svg><div><b>「Subway，所以有固定的喜好餐點，但到了店面點餐時才知道沒有要的餐點內容了，這使我失望及浪費時間。」</b><small>—25 歲重視健康的女學生 Carina</small></div></button>
+          <button type="button" class="q" data-k="mei"><svg><use href="#i-ar"/></svg><div><b>「餐點如果有提供熱量，會幫助我更快的選擇餐點和維持飲食。」</b><small>—26 歲控制體重的上班族 Mei</small></div></button>
+          <button type="button" class="q" data-k="sinny"><svg><use href="#i-ar"/></svg><div><b>「因為直接去店面點餐比較快，所以我比較少使用線上訂餐，但用餐時段都要排隊也是蠻煩的。」</b><small>—26 歲重視效率的上班族 Sinny</small></div></button>
+          <button type="button" class="q" data-k="wen"><svg><use href="#i-ar"/></svg><div><b>「三角切片起司和切絲巧達起司的差別是？沒有照片不知道差異在哪。」</b><small>—25 歲常加班的上班族 Wen</small></div></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="blk"><h2 class="h2">訪談見解</h2><p class="p">將訪談數據整理成使用者的行為、思考和感受後，得出關鍵見解：</p></div>
+      <div class="grid g3">
+        <div class="card ic"><div class="ph" style="aspect-ratio:220/176"><span>餐點敘述標示不清<br>assets/05-insight-1-menu-labels.png</span><img src="assets/05-insight-1-menu-labels.png" alt="餐點敘述標示不清" onerror="this.remove()"></div><h3 class="h3">/* 洞察 1 */</h3><div class="ci"><span class="t">餐點與配料標示不清</span><span class="p">3 位受訪者有此困擾，無法從餐名知曉內容物並立即判斷點餐內容，難以快速判斷並點餐。</span></div></div>
+        <div class="card ic"><div class="ph" style="aspect-ratio:220/176"><span>無法掌握店家現況<br>assets/05-insight-2-store-status.png</span><img src="assets/05-insight-2-store-status.png" alt="無法掌握店家現況" onerror="this.remove()"></div><h3 class="h3">/* 洞察 2 */</h3><div class="ci"><span class="t">不清楚門市現況而撲空</span><span class="p">4 位受訪者到了店家才知道人潮多寡或商品已售完，缺乏門市現場即時負載與原料庫存資訊，感到沮喪和無奈，是使用者放棄消費的主因。</span></div></div>
+        <div class="card ic"><div class="ph" style="aspect-ratio:220/176"><span>期望看到餐點熱量<br>assets/05-insight-3-calories.png</span><img src="assets/05-insight-3-calories.png" alt="期望看到餐點熱量" onerror="this.remove()"></div><h3 class="h3">/* 洞察 3 */</h3><div class="ci"><span class="t">自選時想即時看到熱量</span><span class="p">受訪者皆認為熱量有助於他們挑選餐點並感到安心，熱量數據不該是事後的懲罰或獨立的 PDF 查閱表，而應該是「當下幫助決策」的心理錨點。</span></div></div>
+      </div>
+    </section>
+
+    <!-- STEP 2 洞察 -->
+    <div id="insight" class="step"><i>2</i><span>洞察</span></div>
+
+    <section class="sec">
+      <div class="blk"><h2 class="h2">重新檢視假設</h2><p class="p">根據調查與訪談的見解重新檢視初步假設，修正用字並更精確聚焦在主要影響使用者的項目上，確保設計決策以使用者為中心，並幫助建立人物誌。</p></div>
+      <div class="card tbl">
+        <table>
+          <thead><tr><th style="width:50%">初步假設</th><th>修正假設</th></tr></thead>
+          <tbody>
+            <tr><td>提供餐點熱量供參考</td><td class="me"><svg><use href="#i-tick"/></svg>提供餐點熱量與內容敘述，以快速了解餐點</td></tr>
+            <tr><td>明確的餐點等候時間</td><td class="me"><svg><use href="#i-tick"/></svg>明確的點餐介面、指引與內容，加速點餐效率</td></tr>
+            <tr><td>店家、餐點現況（供應餐點、人潮、等候時間）</td><td class="me"><svg><use href="#i-tick"/></svg>店家、餐點現況（供應餐點、人潮、等候時間）</td></tr>
+            <tr><td>趨勢與話題的品牌認同度（新商品、聯名商品）</td><td class="me"><svg><use href="#i-tick"/></svg>提供餐點篩選服務，幫助餐點選擇</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h3 class="h3">/* 人物誌 */</h3>
+      <div class="blk"><h2 class="h2">三位代表人物：以 Mia 為主要角色</h2><p class="p">依據訪談資料提煉出代表性人物誌「無固定飲食習慣的大學生 Mia」——在控制身材與犒賞自己之間拉扯，期望快速滿足口腹之慾卻害怕踏入選餐地雷；Bella 與 Daya 為次要角色。</p></div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <article class="pc">
+          <header><div class="r"><h3>Mia｜無固定飲食習慣</h3><span class="tag">主要角色</span></div><p>21 歲・國立大學大三學生・外食比例 85%・著重平衡罪惡感與無憂挖掘美食</p></header>
+          <div class="row">
+            <div class="fl">
+              <div class="ph ph-mia"><span>Mia 人物照片<br>assets/06-persona-mia.png</span><img src="assets/06-persona-mia.png" alt="Mia" onerror="this.remove()"></div>
+              <div><p class="lab" style="font:400 16px/22px var(--f-ui);color:#636363">品牌</p>
+                <div class="bz" style="margin-top:2px">
+                  <div class="ph" title="foodpanda" style="aspect-ratio:63/63"><img src="assets/07-brand-foodpanda.png" alt="foodpanda" onerror="this.remove()"></div>
+                  <div class="ph" title="Uber Eats" style="aspect-ratio:65/63"><img src="assets/07-brand-ubereats.png" alt="Uber Eats" onerror="this.remove()"></div>
+                  <div class="ph" title="Instagram" style="aspect-ratio:62/63"><img src="assets/07-brand-instagram.png" alt="Instagram" onerror="this.remove()"></div>
+                  <div class="ph" title="Google Maps" style="aspect-ratio:53/63"><img src="assets/07-brand-googlemaps.png" alt="Google Maps" onerror="this.remove()"></div>
+                </div></div>
+            </div>
+            <div class="col" style="justify-content:space-between;align-self:stretch;gap:16px">
+              <div class="col" style="flex:none">
+                <div class="chips"><span class="chip dk">吃貨</span><span class="chip dk">沒有固定飲食方式</span><span class="chip dk">好奇心強</span></div>
+                <p class="qt">「如果有人能先幫我算好、配好，我只要按兩下手機，就能在去學校的路上抓了就走，這才是理想的數位點餐。」</p>
+                <div class="two">
+                  <div><p class="lbl">關鍵痛點</p><ul class="bl"><li>不想在人群前慢慢研究醬料成分</li><li>到店才發現缺料，臨時改菜單很焦慮</li><li>擔心點了高熱量醬料，下午充滿罪惡感</li></ul></div>
+                  <div><p class="lbl">目標需求</p><ul class="bl"><li>找到快速、清爽不油膩的餐點</li><li>清楚知道一餐的熱量與蛋白質</li><li>課間 20 分鐘內準時拿到餐點</li></ul></div>
+                </div>
+              </div>
+              <div><p class="lbl">對應應用程式功能</p><div class="chips"><span class="chip">依需求推薦餐點</span><span class="chip">建議熱量條</span><span class="chip">掌握店家即時情況</span><span class="chip">快速取餐辨識</span></div></div>
+            </div>
+          </div>
+        </article>
+        <div class="grid g2" style="gap:6px">
+          <article class="pc" style="justify-content:space-between">
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <header><div class="r"><h3>Bella｜正在改變飲食習慣</h3><span class="tag">次要角色</span></div><p>26 歲・雜誌社編輯・台北獨自租屋</p></header>
+              <div class="ph sq"><span>Bella<br>人物照片<br><small>assets/06-persona-bella.png</small></span><img src="assets/06-persona-bella.png" alt="Bella" onerror="this.remove()"></div>
+              <p class="qt">「減重的同時，能夠建立健康飲食觀念，讓身材變好的同時，也能變得更加健康。」</p>
+              <div><p class="lbl">關鍵痛點</p><ul class="bl"><li>持續漸進減重，找到適合自己的飲食型態</li><li>減重後維持良好體態</li></ul></div>
+              <div><p class="lbl">目標需求</p><ul class="bl"><li>想要小份、清爽、無澱粉的選擇，午餐常是大份主餐加澱粉，吃不完</li><li>為了控制攝取，需要看到餐點熱量與內容標示，也擔心吃到牛製品</li><li>不清楚飲食上該注意什麼，又不想花時間調查</li></ul></div>
+            </div>
+            <div><p class="lbl">對應應用程式功能</p><div class="chips"><span class="chip">依需求推薦餐點</span><span class="chip">建議熱量條</span><span class="chip">餐點內容標示與篩選</span></div></div>
+          </article>
+          <article class="pc" style="justify-content:space-between">
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <header><div class="r"><h3>Daya｜有固定飲食習慣</h3><span class="tag">次要角色</span></div><p>28 歲・遠端工作者・台北租屋且與室友同住</p></header>
+              <div class="ph sq"><span>Daya<br>人物照片<br><small>assets/06-persona-daya.png</small></span><img src="assets/06-persona-daya.png" alt="Daya" onerror="this.remove()"></div>
+              <p class="qt">「找到符合自己飲食需求的餐廳，又同時能解決選擇障礙困擾，是目前最大的需求！」</p>
+              <div><p class="lbl">關鍵痛點</p><ul class="bl"><li>維持健康飲食與良好體態</li></ul></div>
+              <div><p class="lbl">目標需求</p><ul class="bl"><li>外食菜色少又油，自己開伙又花時間</li><li>希望有店家能讓她自己搭配均衡飲食</li><li>有選擇障礙，希望有健康餐點推薦</li><li>運動後或不知道吃什麼時會選超商，方便快速，但餐點內容固定、選項少</li></ul></div>
+            </div>
+            <div><p class="lbl">對應應用程式功能</p><div class="chips"><span class="chip">依需求推薦餐點</span><span class="chip">簡化重複點餐的流程</span></div></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h3 class="h3">/* 使用者旅程地圖 */</h3>
+      <h2 class="h2">Mia 對 Subway 的體驗感到如何？</h2>
+      <div class="grid g2">
+        <div class="card ci"><span class="t">目標</span><span class="p">省時省力地用線上點餐系統點餐並前往店家取餐。期望流程具備：快速點餐、明確的取餐時間、適合自己的餐點選項。</span></div>
+        <div class="card ci"><span class="t">背景</span><span class="p">夏季接近中午時，Mia 在學校想來點清爽低熱量的餐點，為了避開人潮，決定先線上點餐再到店面取餐。</span></div>
+      </div>
+      <div class="imgbox"><div class="ph" style="aspect-ratio:790/433"><span>使用者旅程地圖<br>assets/08-journey-map.png</span><img src="assets/08-journey-map.png" alt="Mia 的使用者旅程地圖" onerror="this.remove()"></div></div>
+    </section>
+
+    <section class="sec">
+      <h3 class="h3">/* 洞察見解 */</h3>
+      <div class="blk"><h2 class="h2">影響使用者心情的痛點與假設</h2><p class="p">依峰終定律，將對使用者留下印象的關係強度依序排列：</p></div>
+      <div class="grid g3">
+        <div class="card sh ci" style="gap:12px"><span class="t sb">最後一步驟｜無法掌握店家實際狀況</span><span class="p" style="font-family:var(--f-tc)">明確的店家、餐點實際狀況（供應餐點、人潮狀況、等候時間）</span><div class="chips"><span class="chip">掌握店家即時情況</span></div></div>
+        <div class="card sh ci" style="gap:12px"><span class="t sb">快樂高峰｜無法有效選擇餐點</span><span class="p" style="font-family:var(--f-tc)">提供餐點篩選服務；提供餐點熱量與內容敘述</span><div class="chips"><span class="chip">依需求推薦餐點</span><span class="chip">建議熱量條</span></div></div>
+        <div class="card sh ci" style="gap:12px"><span class="t sb">整體流程｜點餐順序雜亂</span><span class="p" style="font-family:var(--f-tc)">明確的點餐介面、指引與內容，加速點餐效率</span><div class="chips"><span class="chip">簡化重複點餐的流程</span><span class="chip">快速取餐辨識</span></div></div>
+      </div>
+    </section>
+
+    <!-- STEP 3 -->
+    <div id="define" class="step"><i>3</i><span>問題定義＆發想</span></div>
+
+    <section class="sec">
+      <h3 class="h3">/* POV */</h3>
+      <div class="blk"><h2 class="h2">問題陳述的修訂</h2><p class="p">根據假設問題與人物誌的陳述，定義整個專案的目標，以更好地與使用者需求保持一致。</p></div>
+      <div class="card"><p class="big">「常使用社群的吃貨大學生 Mia，需要一個可以讓她無憂無慮挖掘美食、平衡罪惡感的點餐經驗，因為吃美食是她的快樂來源之一，但吃多身材走樣導致的焦慮感，會影響她獲取吃美食的快樂。」</p></div>
+    </section>
+
+    <section class="sec">
+      <h3 class="h3">/* HMW */</h3>
+      <div class="blk"><h2 class="h2">如何找到關鍵 HMW？</h2><p class="p">通過 10 大激盪方向發想專案問題與可能的領域，找學習 UI/UX 的朋友投票獲取反饋，並依對專案的重要性與點餐流程排列，找出能提供最大效益的點子。</p></div>
+      <div class="imgbox"><div class="ph" style="aspect-ratio:790/720"><span>HMW｜10 大激盪方向與投票結果<br>assets/09-hmw-brainstorm.png</span><img src="assets/09-hmw-brainstorm.png" alt="HMW 10 大激盪方向與投票結果" onerror="this.remove()"></div></div>
+      <div class="card" style="background:#fff"><p class="big">「我們何不提供可以快速依需求調整的客製化餐點選項，去幫助在意體態變化的 Mia 滿足需求？」</p></div>
+    </section>
+
+    <section class="sec">
+      <div class="blk"><h2 class="h2">如何決定發展點子？</h2><p class="p">以 Crazy8 快速發想並投票，再依點子對使用者及商業端的重要度篩選，找到能發揮最大效益的點子。</p></div>
+      <div class="grid g3">
+        <div class="card ic"><div class="ph" style="aspect-ratio:220/170"><span>快速發想｜Crazy8<br>assets/10-ideation-crazy8.png</span><img src="assets/10-ideation-crazy8.png" alt="快速發想 Crazy8" onerror="this.remove()"></div><h3 class="h3">/* 快速發想 */</h3><div class="ci"><span class="t">Crazy8</span><span class="p">進行快速發想，找到切入方向</span></div></div>
+        <div class="card ic"><div class="ph" style="aspect-ratio:220/170"><span>收斂發想｜四象限圖<br>assets/11-ideation-matrix.png</span><img src="assets/11-ideation-matrix.png" alt="收斂發想 四象限圖" onerror="this.remove()"></div><h3 class="h3">/* 收斂發想 */</h3><div class="ci"><span class="t">四象限圖</span><span class="p">篩選與排序對使用者端及商業端有高影響度的 HMW</span></div></div>
+        <div class="card ic"><div class="ph" style="aspect-ratio:220/170"><span>收斂發想｜點餐流程與重要程度<br>assets/12-ideation-flow-priority.png</span><img src="assets/12-ideation-flow-priority.png" alt="收斂發想 點餐流程與重要程度" onerror="this.remove()"></div><h3 class="h3">/* 收斂發想 */</h3><div class="ci"><span class="t">點餐流程與重要程度</span><span class="p">依重要度排列，選出能幫助 Mia 的點子</span></div></div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2 class="h2">什麼對 Mia 最有幫助？</h2>
+      <div class="grid g2" style="gap:6px">
+        <div class="card sc"><h3 class="h3">/* 功能 1 */</h3><div class="ci"><span class="t">依需求推薦餐點</span><span class="p">依肉料、口味、熱量等需求給予餐點與醬料推薦 → 幫助 Mia 快速依需求調整客製化餐點</span></div></div>
+        <div class="card sc"><h3 class="h3">/* 功能 2 */</h3><div class="ci"><span class="t">建議熱量條</span><span class="p">配合挑選餐點項目增減熱量 → 幫助 Mia 快速了解客製化餐點熱量</span></div></div>
+        <div class="card sc"><h3 class="h3">/* 功能 3 */</h3><div class="ci"><span class="t">掌握店家與訂單即時情況</span><span class="p">確認店家等待人數及餐點狀況，避免事後才知道要等很久 → 幫助 Mia 掌握店家的實際狀況</span></div></div>
+        <div class="card sc"><h3 class="h3">/* 功能 4 */</h3><div class="ci"><span class="t">快速取餐辨識</span><span class="p">除取餐編號外，以顏色幫助店員快速辨識，提升取餐速度 → 幫助 Mia 減少與人接觸的時間</span></div></div>
+      </div>
+    </section>
+
+    <!-- STEP 4 -->
+    <div id="prototype" class="step"><i>4</i><span>原型</span></div>
+
+    <section class="sec">
+      <h3 class="h3">/* 使用者流程 */</h3>
+      <div class="blk"><h2 class="h2">Mia 如何在 Subway App 上進行點餐？</h2><p class="p">繪製 Mia 的使用者流程，幫助設計保持以使用者為中心，從 Mia 的角度確認應用程式需要哪些頁面或功能。</p></div>
+      <div class="card ci" style="gap:6px"><span class="t">流程目標：點餐並完成取餐</span><span class="p">註冊帳戶 → 進行熱量測試 → 完成餐點測試 → 更改餐點內容 → 送出訂單 → 完成取餐</span></div>
+      <div class="imgbox"><div class="ph" style="aspect-ratio:790/562"><span>使用者流程圖<br>assets/13-user-flow.png</span><img src="assets/13-user-flow.png" alt="Mia 的使用者流程圖" onerror="this.remove()"></div></div>
+    </section>
+
+    <section class="sec">
+      <h3 class="h3">/* 線框圖 */</h3>
+      <div class="blk"><h2 class="h2">從草圖到第一個可點擊的原型</h2><p class="p">繪製初步稿與原型並收集朋友的意見，依循目標優化介面架構：客製化餐點、主菜單、店面選擇、訂單查詢。</p></div>
+      <div class="grid g2">
+        <div class="card" style="display:grid;align-items:center"><div class="ph" style="aspect-ratio:357/166.5"><span>客製化餐點與主菜單線框圖<br>assets/14-wireframe-custom-menu.png</span><img src="assets/14-wireframe-custom-menu.png" alt="客製化餐點與主菜單線框圖" onerror="this.remove()"></div></div>
+        <div class="card"><div class="ph" style="aspect-ratio:357/217.5"><span>店面選擇與訂單查詢線框圖<br>assets/15-wireframe-store-orders.png</span><img src="assets/15-wireframe-store-orders.png" alt="店面選擇與訂單查詢線框圖" onerror="this.remove()"></div></div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h3 class="h3">/* 設計指南 */</h3>
+      <div class="blk"><h2 class="h2">設計模板與風格</h2><p class="p">建立設計模板以構建一致性，並在構建新功能時節省時間，改善整體流程和體驗。</p></div>
+      <div class="card">
+        <div class="dg">
+          <div class="ph" style="flex:1;aspect-ratio:653/1325;border-radius:0;background:#fff;border:0"><span>AppBar</span><img src="assets/16-guide-appbar.png" alt="AppBar" onerror="this.remove()"></div>
+          <div class="ph" style="flex:1;aspect-ratio:653/1325;border-radius:0;background:#fff;border:0"><span>UI Elements</span><img src="assets/16-guide-ui-elements.png" alt="UI Elements" onerror="this.remove()"></div>
+          <div class="ph" style="flex:1;aspect-ratio:653/1325;border-radius:0;background:#fff;border:0"><span>Buttons</span><img src="assets/16-guide-buttons.png" alt="Buttons" onerror="this.remove()"></div>
+          <div class="ph" style="flex:1;aspect-ratio:653/863;border-radius:0;background:#fff;border:0"><span>Colors</span><img src="assets/16-guide-colors.png" alt="Colors" onerror="this.remove()"></div>
+          <div class="ph" style="flex:1;aspect-ratio:653/863;border-radius:0;background:#fff;border:0"><span>Bottom</span><img src="assets/16-guide-bottom-nav.png" alt="Bottom" onerror="this.remove()"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h3 class="h3">/* 設計成果 */</h3>
+      <h2 class="h2" style="font-weight:700">操作流程展示：使用者測試之前</h2>
+      <div class="vcard">
+        <div class="vp" id="vp">
+          <video id="vid" playsinline muted preload="metadata" src="assets/17-video-before-testing.mp4#t=0.1" aria-label="操作流程展示：使用者測試之前"></video>
+          <div class="vp-ui">
+            <div class="vp-bar">
+              <button type="button" class="vb big" id="vplay" aria-label="播放"><svg viewBox="0 0 24 24" fill="#fff"><path id="vpi" d="M8 5v14l11-7z"/></svg></button>
+              <div class="vp-ctl">
+                <span class="vtime" id="vtime">0:00</span>
+                <input type="range" id="vseek" min="0" max="1000" value="0" aria-label="播放進度">
+                <button type="button" class="vb" id="vmute" aria-label="開啟聲音"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z" fill="#fff"/><path id="vmi" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" style="opacity:.2"/></svg></button>
+                <button type="button" class="vb sp" id="vspeed" aria-label="播放速度">1.5x</button>
+                <button type="button" class="vb" id="vfull" aria-label="全螢幕"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fg">
+        <article class="fc">
+          <button type="button" class="fv-v" aria-label="放大檢視：依需求推薦餐點操作流程">
+            <video muted loop playsinline preload="metadata" poster="assets/30-flow-recommend-poster.png"><source src="assets/30-flow-recommend.mp4" type="video/mp4"></video><span class="zb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg></span>
+          </button>
+          <div class="fc-t"><h3 class="h3">/* 功能 1 */</h3><h4 class="fv-h">依需求推薦餐點</h4><p class="p">依肉料、口味、熱量等需求給予餐點與醬料推薦，幫助 Mia 快速依需求調整客製化餐點</p></div>
+        </article>
+        <article class="fc">
+          <button type="button" class="fv-v" aria-label="放大檢視：建議熱量條操作流程">
+            <video muted loop playsinline preload="metadata" poster="assets/32-flow-2-poster.png"><source src="assets/32-flow-2.mp4" type="video/mp4"></video><span class="zb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg></span>
+          </button>
+          <div class="fc-t"><h3 class="h3">/* 功能 2 */</h3><h4 class="fv-h">建議熱量條</h4><p class="p">配合挑選餐點項目增減熱量，幫助 Mia 快速了解客製化餐點熱量</p></div>
+        </article>
+        <article class="fc">
+          <button type="button" class="fv-v" aria-label="放大檢視：掌握店家與訂單即時情況操作流程">
+            <video muted loop playsinline preload="metadata" poster="assets/33-flow-3-poster.png"><source src="assets/33-flow-3.mp4" type="video/mp4"></video><span class="zb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg></span>
+          </button>
+          <div class="fc-t"><h3 class="h3">/* 功能 3 */</h3><h4 class="fv-h">掌握店家與訂單即時情況</h4><p class="p">確認店家等待人數及餐點狀況，避免事後才知道要等很久，幫助 Mia 掌握店家的實際狀況</p></div>
+        </article>
+        <article class="fc">
+          <button type="button" class="fv-v" aria-label="放大檢視：快速取餐辨識操作流程">
+            <video muted loop playsinline preload="metadata" poster="assets/34-flow-4-poster.png"><source src="assets/34-flow-4.mp4" type="video/mp4"></video><span class="zb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg></span>
+          </button>
+          <div class="fc-t"><h3 class="h3">/* 功能 4 */</h3><h4 class="fv-h">快速取餐辨識</h4><p class="p">除取餐編號外，以顏色幫助店員快速辨識，提升取餐速度，幫助 Mia 減少與人接觸的時間</p></div>
+        </article>
+      </div>
+      
+    </section>
+
+  </main>
+
+  <aside class="rail" aria-label="案例目錄">
+    <a class="back" href="../#work" data-int><svg><use href="#i-back"/></svg>返回</a>
+    <nav class="toc" id="toc"></nav>
+  </aside>
+</div>
+
+<footer class="ft">
+    <section id="contact" class="cta">
+      <h2 aria-label="一起聊聊你的產品、設計職缺或合作機會"><span class="t1" aria-hidden="true">一起聊聊</span><span class="ar" aria-hidden="true"><svg><use href="#i-big"/></svg></span><span class="rot" aria-hidden="true" data-words="你的產品|設計職缺|合作機會"><span class="tw">你的產品</span></span></h2>
+      <div class="row">
+        <a class="btn em" href="mailto:s110413336@student.nqu.edu.tw"><svg><use href="#i-mail20"/></svg>寄信給我</a>
+        <a class="ib" href="https://www.instagram.com/lucky_cat_lifestyle/" target="_blank" rel="noopener" aria-label="Instagram"><svg><use href="#i-ig"/></svg></a>
+        <a class="ib" href="https://www.linkedin.com/in/liya-lin-a4681624b/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg><use href="#i-in"/></svg></a>
+      </div>
+      <a class="next" href="../subway-usability/" data-int>下一篇：Subway App 易用性測試（下） <svg><use href="#i-arr"/></svg></a>
+    </section>
+  <div class="ft-in">
+    <a class="ft-l" href="../" data-int aria-label="回到作品集主頁">
+      <div class="r"><b>Liya Lin</b></div>
+      <p>產品設計師 · 為了相信而去質疑 · 2026 年更新</p>
+    </a>
+  </div>
+</footer>
+
+<script>
+/* open at the top unless a section is linked */
+(function(){try{if('scrollRestoration' in history)history.scrollRestoration='manual'}catch(e){}
+  function top(){
+    if(!location.hash){window.scrollTo(0,0);return}
+    var id=decodeURIComponent(location.hash.slice(1)).replace(/^en-?/,'');if(!id){window.scrollTo(0,0);return}
+    var el=null;try{el=document.getElementById(id)}catch(e){}
+    if(el){var y=el.getBoundingClientRect().top+window.scrollY-88;window.scrollTo({top:Math.max(0,y),behavior:'instant'})}
+  }
+  if(!location.hash)top();document.addEventListener('DOMContentLoaded',top);window.addEventListener('load',top);window.addEventListener('pageshow',function(e){if(e.persisted)top()});})();
+</script>
+<script>
+(function(){
+  var ids=['overview','problem','discover','insight','define','prototype','contact'];
+  var links={};document.querySelectorAll('#toc a').forEach(function(a){links[a.getAttribute('href').slice(1)]=a});
+  function spy(){
+    var cur='overview',y=140;
+    ids.forEach(function(id){var el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<=y)cur=id});
+    if(window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-4)cur='contact';
+    Object.keys(links).forEach(function(k){links[k].classList.toggle('on',k===cur)});
+  }
+  window.addEventListener('scroll',spy,{passive:true});spy();
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
+  // mark placeholders whose image loaded
+  document.querySelectorAll('.ph img').forEach(function(i){
+    function ok(){if(i.naturalWidth)i.parentNode.classList.add('ok')}
+    if(i.complete)ok();else i.addEventListener('load',ok);
+  });
+
+  /* ---------- video: autoplay in view, 1.5x default, click to pause, seek ---------- */
+  var vp=document.getElementById('vp'),v=document.getElementById('vid'),seek=document.getElementById('vseek'),tm=document.getElementById('vtime');
+  var seeking=false,userPaused=false,inView=false,RATE=1.5;
+  if(vp){
+  function fmt(t){t=Math.floor(t||0);return Math.floor(t/60)+':'+('0'+(t%60)).slice(-2)}
+  function upd(){var d=v.duration||0;seek.style.setProperty('--p',(d?v.currentTime/d*100:0)+'%');if(!seeking)seek.value=d?v.currentTime/d*1000:0;tm.textContent=fmt(v.currentTime)+(d?' / '+fmt(d):'')}
+  function icon(){document.getElementById('vpi').setAttribute('d',v.paused?'M8 5v14l11-7z':'M6 5h4v14H6zM14 5h4v14h-4z');document.getElementById('vplay').setAttribute('aria-label',v.paused?'播放':'暫停');vp.classList.toggle('playing',!v.paused)}
+  function rate(){v.defaultPlaybackRate=RATE;v.playbackRate=RATE;document.getElementById('vspeed').textContent=RATE+'x'}
+  function play(){rate();var r=v.play();if(r&&r.catch)r.catch(function(){})}
+  function toggle(){if(v.paused){userPaused=false;if(v.ended)v.currentTime=0;play()}else{userPaused=true;v.pause()}}
+  document.getElementById('vplay').addEventListener('click',function(e){e.stopPropagation();toggle()});
+  vp.addEventListener('click',function(e){if(!e.target.closest('.vp-bar'))toggle()});
+  ['timeupdate','loadedmetadata','durationchange'].forEach(function(e){v.addEventListener(e,upd)});
+  v.addEventListener('loadedmetadata',rate);
+  ['play','pause','ended'].forEach(function(e){v.addEventListener(e,icon)});
+  seek.addEventListener('input',function(){seeking=true;if(v.duration)v.currentTime=seek.value/1000*v.duration;upd()});
+  seek.addEventListener('change',function(){seeking=false});
+  document.getElementById('vmute').addEventListener('click',function(e){e.stopPropagation();v.muted=!v.muted;document.getElementById('vmi').style.opacity=v.muted?0.2:1;this.setAttribute('aria-label',v.muted?'開啟聲音':'靜音')});
+  var rates=[1,1.5,2];
+  document.getElementById('vspeed').addEventListener('click',function(e){e.stopPropagation();RATE=rates[(rates.indexOf(RATE)+1)%rates.length];rate()});
+  document.getElementById('vfull').addEventListener('click',function(e){e.stopPropagation();try{var r=(vp.requestFullscreen||vp.webkitRequestFullscreen);if(document.fullscreenElement){document.exitFullscreen()}else if(r){var q=r.call(vp);if(q&&q.catch)q.catch(function(){})}else if(v.webkitEnterFullscreen){v.webkitEnterFullscreen()}}catch(err){}});
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(es){es.forEach(function(en){
+      inView=en.isIntersecting;
+      if(inView){ if(!userPaused&&v.paused){ if(v.ended)v.currentTime=0; play() } }
+      else { if(!v.paused)v.pause(); userPaused=false }
+    })},{threshold:.55}).observe(vp);
+  }
+  rate();upd();icon();}
+
+  /* ---------- interview carousel: auto-rotate, hover / click to switch ---------- */
+  var qs=[].slice.call(document.querySelectorAll('#qs .q')),ims=[].slice.call(document.querySelectorAll('.ivph img')),ivCard=document.querySelector('.card.iv');
+  var cur=0,timer=null,hovering=false,vis=true;
+  var dots=[],pgv=0,lastTs=0,raf=0,DUR=2000,imAt=[];
+  function mob(){return window.matchMedia('(max-width:820px)').matches}
+  function put(el,x,anim){el.style.transition=anim?'':'none';el.style.transform='translate3d('+x+'%,0,0)'}
+  function slide(list,i,prev,dir,cls){
+    list.forEach(function(el,j){
+      if(!el)return;
+      if(j===i){
+        if(prev!==i){put(el,dir*100,false);void el.offsetWidth;if(cls){el.classList.remove('out');el.classList.add('on')}put(el,0,true)}
+        else{if(cls)el.classList.add('on');put(el,0,false)}
+      }else if(j===prev&&prev!==i){
+        if(cls){el.classList.remove('on');el.classList.add('out')}
+        put(el,-dir*100,true);
+        if(cls){clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove('out')},700)}
+      }else{
+        if(cls)el.classList.remove('on');
+        if(!cls||!el.classList.contains('out'))put(el,dir*100,false);
+      }
+    });
+  }
+  function show(i,dir){
+    var n=qs.length,prev=cur;cur=i;
+    if(dir===undefined)dir=(i===(prev+1)%n)?1:(i===(prev-1+n)%n)?-1:(i>prev?1:-1);
+    qs.forEach(function(x,j){x.classList.toggle('on',j===i);x.setAttribute('aria-pressed',j===i)});
+    slide(imAt,i,prev,dir,true);
+    if(mob())slide(qs,i,prev,dir,false);
+    dots.forEach(function(b,j){b.dataset.d=Math.abs(j-i);b.classList.toggle('on',j===i);b.style.setProperty('--pg',0)});
+    pgv=0;lastTs=0;
+  }
+  function stop(){if(raf){cancelAnimationFrame(raf);raf=0}lastTs=0}
+  function tick(ts){
+    raf=0;if(reduce||hovering||!vis){lastTs=0;return}
+    if(!lastTs)lastTs=ts;
+    pgv+=Math.min(ts-lastTs,100)/DUR;lastTs=ts;
+    if(pgv>=1){show((cur+1)%qs.length,1)}else if(dots[cur])dots[cur].style.setProperty('--pg',pgv);
+    raf=requestAnimationFrame(tick);
+  }
+  function go(){stop();if(reduce||hovering||!vis)return;raf=requestAnimationFrame(tick)}
+  qs.forEach(function(q,i){
+    q.addEventListener('mouseenter',function(){show(i)});
+    q.addEventListener('focus',function(){show(i)});
+    q.addEventListener('click',function(){show(i);go()});
+  });
+  if(ivCard){
+    ivCard.addEventListener('mouseenter',function(){hovering=true;stop()});
+    ivCard.addEventListener('mouseleave',function(){hovering=false;go()});
+    ivCard.addEventListener('focusin',function(){hovering=true;stop()});
+    ivCard.addEventListener('focusout',function(){hovering=false;go()});
+    if('IntersectionObserver' in window)new IntersectionObserver(function(es){vis=es[0].isIntersecting;go()},{threshold:.4}).observe(ivCard);
+    ivCard.addEventListener('click',function(){if(!window.matchMedia('(max-width:820px)').matches)return;hovering=false;show((cur+1)%qs.length);go()});
+  }
+  (function(){
+    imAt=qs.map(function(q){return ims.filter(function(m){return m.dataset.k===q.dataset.k})[0]});
+    var host=ims.length?ims[0].parentNode:null;
+    if(host){var dw=document.createElement('div');dw.className='ivd';dw.setAttribute('role','group');dw.setAttribute('aria-label','訪談切換');
+      qs.forEach(function(q,j){var b=document.createElement('button');b.type='button';b.className='ivd-i';b.setAttribute('aria-label','第 '+(j+1)+' 位受訪者');b.innerHTML='<i></i>';b.addEventListener('click',function(e){e.stopPropagation();show(j);go()});dw.appendChild(b);dots.push(b)});
+      host.appendChild(dw)}
+    function layout(){qs.forEach(function(q,j){if(mob()){put(q,j===cur?0:100,false)}else{q.style.transform='';q.style.transition=''}})}
+    layout();
+    var mq=window.matchMedia('(max-width:820px)');if(mq.addEventListener)mq.addEventListener('change',layout);
+    if(ivCard){var sx=0,sy=0;
+      ivCard.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+      ivCard.addEventListener('touchend',function(e){var t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)*1.4){var n=qs.length;show(dx<0?(cur+1)%n:(cur-1+n)%n,dx<0?1:-1);go()}},{passive:true});
+    }
+    show(0,1);go();
+  })();
+
+  /* ---------- unified video enlarge (bottom controls, bottom-center close) ---------- */
+  (function(){
+    return; /* superseded by the .vn modal below */
+    var m=document.createElement('div');m.className='vm';m.hidden=true;m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');m.setAttribute('aria-label','影片檢視');
+    m.innerHTML='<div class="vm-s"><video playsinline loop></video></div><div class="vm-bar">'
+     +'<button type="button" data-a="pp" aria-label="播放或暫停"><svg viewBox="0 0 24 24" fill="currentColor"><path class="pl" d="M8 5v14l11-7z"/><path class="pa" d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button>'
+     +'<button type="button" data-a="rp" aria-label="重新播放"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V2L7 6.5 12 11V8a5 5 0 1 1-5 5H5a7 7 0 1 0 7-8z"/></svg></button>'
+     +'<span class="vm-t">0:00 / 0:00</span><input class="vm-r" type="range" min="0" max="1000" value="0" aria-label="播放進度">'
+     +'<button type="button" class="vm-sp" data-a="sp" aria-label="播放速度">1x</button>'
+     +'<button type="button" data-a="mu" aria-label="靜音切換"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3z"/><path class="mw" d="M16.5 12a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/><path class="mx" d="M16 9l5 6M21 9l-5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>'
+     +'<button type="button" class="lb-x" aria-label="關閉"><svg><use href="#i-close"/></svg></button>';
+    document.body.appendChild(m);
+    var mv=m.querySelector('video'),rng=m.querySelector('.vm-r'),tm=m.querySelector('.vm-t'),sp=m.querySelector('.vm-sp'),xb=m.querySelector('.lb-x');
+    var src=null,was=false,opener=null,isOpen=false,drag=false,rates=[1,1.5,2];
+    function fmt(s){s=Math.max(0,s|0);return (s/60|0)+':'+('0'+s%60).slice(-2)}
+    function upd(){var d=mv.duration||0;tm.textContent=fmt(mv.currentTime)+' / '+fmt(d);if(!drag)rng.value=d?Math.round(mv.currentTime/d*1000):0}
+    function togg(){if(mv.paused){var p=mv.play();if(p&&p.catch)p.catch(function(){})}else mv.pause()}
+    mv.addEventListener('timeupdate',upd);mv.addEventListener('durationchange',upd);
+    mv.addEventListener('play',function(){m.classList.add('playing')});mv.addEventListener('pause',function(){m.classList.remove('playing')});
+    mv.addEventListener('ratechange',function(){sp.textContent=(+mv.playbackRate.toFixed(2))+'x'});
+    mv.addEventListener('click',togg);
+    rng.addEventListener('pointerdown',function(){drag=true});
+    addEventListener('pointerup',function(){drag=false});
+    rng.addEventListener('input',function(){var d=mv.duration||0;if(d)mv.currentTime=rng.value/1000*d;upd()});
+    m.querySelector('.vm-bar').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var a=b.dataset.a;
+      if(a==='pp')togg();
+      else if(a==='rp'){mv.currentTime=0;var p=mv.play();if(p&&p.catch)p.catch(function(){})}
+      else if(a==='sp'){var i=rates.indexOf(mv.playbackRate);mv.playbackRate=rates[(i+1)%rates.length]}
+      else if(a==='mu'){mv.muted=!mv.muted;m.classList.toggle('muted',mv.muted)}});
+    function open(v,btn){
+      if(!v||isOpen)return;isOpen=true;src=v;was=!v.paused;opener=btn||v;v.pause();
+      var t=v.currentTime||0,rate=v.playbackRate||1;
+      m.classList.toggle('clip',!!v.closest('.vp'));mv.muted=true;m.classList.add('muted');
+      mv.src=v.currentSrc;
+      mv.addEventListener('loadedmetadata',function f(){mv.removeEventListener('loadedmetadata',f);try{mv.currentTime=t}catch(e){}mv.playbackRate=rate;var p=mv.play();if(p&&p.catch)p.catch(function(){})});
+      m.hidden=false;document.documentElement.classList.add('lb-open');requestAnimationFrame(function(){m.classList.add('on')});xb.focus({preventScroll:true});
+    }
+    function close(){
+      if(!isOpen)return;isOpen=false;try{src.currentTime=mv.currentTime}catch(e){}mv.pause();
+      m.classList.remove('on');document.documentElement.classList.remove('lb-open');
+      setTimeout(function(){if(!isOpen){m.hidden=true;mv.removeAttribute('src');mv.load()}},200);
+      if(was){var p=src.play();if(p&&p.catch)p.catch(function(){})}
+      if(opener&&opener.focus)opener.focus({preventScroll:true});
+    }
+    xb.addEventListener('click',close);
+    m.addEventListener('click',function(e){if(e.target===m||e.target.classList.contains('vm-s'))close()});
+    document.addEventListener('keydown',function(e){if(!isOpen)return;if(e.key==='Escape')close();else if(e.key===' '&&!e.target.closest('button,input')){e.preventDefault();togg()}});
+    window.__vm={open:open};
+    var ZI='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg>';
+    [].forEach.call(document.querySelectorAll('.vp'),function(vp){
+      var b=document.createElement('button');b.type='button';b.className='zb';b.setAttribute('aria-label','放大檢視影片');b.innerHTML=ZI;
+      b.addEventListener('click',function(e){e.stopPropagation();open(vp.querySelector('video'),b)});
+      vp.appendChild(b);
+    });
+  })();
+
+  /* ---------- unified video enlarge (controls below, bottom-center close, smooth progress, no audio) ---------- */
+  (function(){
+    var m=document.createElement('div');m.className='vn';m.hidden=true;m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');m.setAttribute('aria-label','影片檢視');
+    m.innerHTML='<div class="vn-s"><div class="vn-c"><div class="vn-f"><video playsinline loop muted></video></div><div class="vn-bar">'
+     +'<button type="button" data-a="pp" aria-label="播放或暫停"><svg viewBox="0 0 24 24" fill="currentColor"><path class="pl" d="M8 5v14l11-7z"/><path class="pa" d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button>'
+     +'<button type="button" data-a="rp" aria-label="重新播放"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></button>'
+     +'<span class="vn-t">0:00 / 0:00</span>'
+     +'<div class="vn-pr" role="slider" tabindex="0" aria-label="播放進度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="vn-tr"><i class="vn-fl"></i></div><b class="vn-th"></b></div>'
+     +'<button type="button" class="vn-sp" data-a="sp" aria-label="播放速度">1x</button></div></div></div>'
+     +'<button type="button" class="lb-x" aria-label="關閉"><svg><use href="#i-close"/></svg></button>';
+    document.body.appendChild(m);
+    var mv=m.querySelector('video'),bar=m.querySelector('.vn-bar'),pr=m.querySelector('.vn-pr'),tm=m.querySelector('.vn-t'),sp=m.querySelector('.vn-sp'),xb=m.querySelector('.lb-x');
+    var src=null,was=false,opener=null,isOpen=false,drag=false,raf=0,lastTxt='',lastW=0,rates=[1,1.5,2];
+    function fmt(s){s=Math.max(0,s|0);return (s/60|0)+':'+('0'+s%60).slice(-2)}
+    function frame(){
+      raf=0;if(!isOpen)return;
+      var d=mv.duration||0,p=d?Math.min(1,mv.currentTime/d):0;
+      if(!drag)pr.style.setProperty('--p',p);
+      var tx=fmt(mv.currentTime)+' / '+fmt(d);if(tx!==lastTxt){lastTxt=tx;tm.textContent=tx;pr.setAttribute('aria-valuenow',Math.round(p*100))}
+      var w=mv.parentNode.offsetWidth;if(w&&w!==lastW){lastW=w;bar.style.setProperty('--bw',Math.max(w,340)+'px')}
+      raf=requestAnimationFrame(frame);
+    }
+    function togg(){if(mv.paused){var p=mv.play();if(p&&p.catch)p.catch(function(){})}else mv.pause()}
+    mv.addEventListener('play',function(){m.classList.add('playing')});mv.addEventListener('pause',function(){m.classList.remove('playing')});
+    mv.addEventListener('ratechange',function(){sp.textContent=(+mv.playbackRate.toFixed(2))+'x'});
+    mv.addEventListener('click',togg);
+    function seekAt(x){var r=pr.getBoundingClientRect(),p=Math.max(0,Math.min(1,(x-r.left)/r.width)),d=mv.duration||0;pr.style.setProperty('--p',p);if(d)mv.currentTime=p*d}
+    pr.addEventListener('pointerdown',function(e){drag=true;try{pr.setPointerCapture(e.pointerId)}catch(_){}seekAt(e.clientX);e.preventDefault()});
+    pr.addEventListener('pointermove',function(e){if(drag)seekAt(e.clientX)});
+    function end(){drag=false}
+    pr.addEventListener('pointerup',end);pr.addEventListener('pointercancel',end);
+    pr.addEventListener('keydown',function(e){var d=mv.duration||0;if(e.key==='ArrowRight'){mv.currentTime=Math.min(d,mv.currentTime+5);e.preventDefault()}else if(e.key==='ArrowLeft'){mv.currentTime=Math.max(0,mv.currentTime-5);e.preventDefault()}});
+    bar.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var a=b.dataset.a;
+      if(a==='pp')togg();
+      else if(a==='rp'){mv.currentTime=0;var p=mv.play();if(p&&p.catch)p.catch(function(){})}
+      else if(a==='sp'){var i=rates.indexOf(mv.playbackRate);mv.playbackRate=rates[(i+1)%rates.length]}});
+    function open(v,btn){
+      if(!v||isOpen)return;isOpen=true;src=v;was=!v.paused;opener=btn||v;v.pause();lastTxt='';lastW=0;
+      var t=v.currentTime||0,rate=v.playbackRate||1;
+      m.classList.toggle('clip',!!v.closest('.vp'));
+      mv.src=v.currentSrc;
+      mv.addEventListener('loadedmetadata',function f(){mv.removeEventListener('loadedmetadata',f);try{mv.currentTime=t}catch(e){}mv.playbackRate=rate;var p=mv.play();if(p&&p.catch)p.catch(function(){})});
+      m.hidden=false;document.documentElement.classList.add('lb-open');requestAnimationFrame(function(){m.classList.add('on')});xb.focus({preventScroll:true});
+      if(!raf)raf=requestAnimationFrame(frame);
+    }
+    function close(){
+      if(!isOpen)return;isOpen=false;try{src.currentTime=mv.currentTime}catch(e){}mv.pause();
+      m.classList.remove('on');document.documentElement.classList.remove('lb-open');
+      setTimeout(function(){if(!isOpen){m.hidden=true;mv.removeAttribute('src');mv.load()}},200);
+      if(was){var p=src.play();if(p&&p.catch)p.catch(function(){})}
+      if(opener&&opener.focus)opener.focus({preventScroll:true});
+    }
+    xb.addEventListener('click',close);
+    m.addEventListener('click',function(e){if(e.target===m||e.target.classList.contains('vn-s'))close()});
+    document.addEventListener('keydown',function(e){if(!isOpen)return;if(e.key==='Escape')close();else if(e.key===' '&&!e.target.closest('button,.vn-pr')){e.preventDefault();togg()}});
+    window.__vm={open:open};
+    var ZI='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg>';
+    [].forEach.call(document.querySelectorAll('.vp'),function(vp){
+      var b=document.createElement('button');b.type='button';b.className='zb';b.setAttribute('aria-label','放大檢視影片');b.innerHTML=ZI;
+      b.addEventListener('click',function(e){e.stopPropagation();open(vp.querySelector('video'),b)});
+      vp.appendChild(b);
+    });
+  })();
+
+  /* ---------- design-result video: thumbnail only opens the enlarged player; feature videos ---------- */
+  [].forEach.call(document.querySelectorAll('.vp'),function(vp){
+    vp.addEventListener('click',function(e){if(e.target.closest('.zb'))return;e.stopImmediatePropagation();window.__vm.open(vp.querySelector('video'),vp)},true);
+    var vc=vp.closest('.vcard'),zbb=vp.querySelector('.zb');
+    if(vc&&zbb){vc.appendChild(zbb);vc.addEventListener('click',function(e){if(e.target.closest('.zb')||e.target.closest('.vp'))return;window.__vm.open(vp.querySelector('video'),vc)})}
+  });
+  [].forEach.call(document.querySelectorAll('.fv-v'),function(card){
+    var v=card.querySelector('video'),inV=false;
+    function sync(){if(reduce||!inV){v.pause()}else{var p=v.play();if(p&&p.catch)p.catch(function(){})}}
+    card.addEventListener('click',function(){window.__vm.open(v,card)});
+    if('IntersectionObserver' in window)new IntersectionObserver(function(es){inV=es[0].isIntersecting;sync()},{threshold:.5}).observe(card);
+  });
+
+  /* ---------- section menu (rail + floating button) ---------- */
+  (function(){
+    var H=[].slice.call(document.querySelectorAll('h3.h3'));
+    function bySec(t){var h=H.filter(function(x){return x.textContent.indexOf(t)>-1})[0];return h&&h.closest('section')}
+    var defs=[];
+    var items=[];
+    var ov=document.getElementById('overview');if(ov)items.push({t:'概覽',n:'',id:'overview',el:ov});
+    [].forEach.call(document.querySelectorAll('.step'),function(st,k){if(!st.id)st.id='st'+k;items.push({t:st.querySelector('span').textContent,n:st.querySelector('i').textContent,id:st.id,el:st})});
+    var toc=document.getElementById('toc'),mn=document.createElement('div');mn.className='mn';
+    mn.innerHTML='<button type="button" class="mn-b" aria-label="開啟目錄" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><nav class="mn-p" aria-label="案例目錄"></nav>';
+    document.body.appendChild(mn);
+    var pn=mn.querySelector('.mn-p'),bt=mn.querySelector('.mn-b');
+    if(toc)toc.innerHTML='';
+    items.forEach(function(it,i){[toc,pn].forEach(function(box){if(!box)return;var a=document.createElement('a');a.href='#'+it.id;var em=document.createElement('em');em.textContent=it.n;a.appendChild(em);a.appendChild(document.createTextNode(it.t));a.dataset.i=i;box.appendChild(a)})});
+    function setOpen(o){mn.classList.toggle('open',o);bt.setAttribute('aria-expanded',o)}
+    bt.addEventListener('click',function(e){e.stopPropagation();setOpen(!mn.classList.contains('open'))});
+    pn.addEventListener('click',function(e){if(e.target.closest('a'))setOpen(false)});
+    document.addEventListener('click',function(e){if(!mn.contains(e.target))setOpen(false)});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')setOpen(false)});
+    function spy(){
+      var cur=0;items.forEach(function(it,i){if(it.el.getBoundingClientRect().top<=140)cur=i});
+      if(window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-4)cur=items.length-1;
+      [].forEach.call(document.querySelectorAll('#toc a,.mn-p a'),function(a){a.classList.toggle('on',+a.dataset.i===cur)});
+    }
+    window.addEventListener('scroll',spy,{passive:true});spy();
+  })();
+
+  /* ---------- header: hide while scrolling down, show on scroll up or after a short pause ---------- */
+  (function(){
+    var hd=document.querySelector('.hd'),root=document.documentElement,lastY=window.scrollY,acc=0,idle=0;
+    if(!hd)return;
+    function set(off){hd.classList.toggle('off',off);root.classList.toggle('hd-off',off)}
+    window.addEventListener('scroll',function(){
+      var y=window.scrollY,d=y-lastY;lastY=y;
+      if(d*acc<0)acc=0;acc+=d;
+      if(y<=60||acc<-8)set(false);else if(acc>16)set(true);
+      clearTimeout(idle);idle=setTimeout(function(){acc=0;set(false)},800);
+    },{passive:true});
+    hd.addEventListener('focusin',function(){set(false)});
+  })();
+
+  /* ---------- CTA: scramble into the next word — 0.8s eased, 1.5s hold ---------- */
+  var cta=document.getElementById('contact');
+  (function(){
+    var rot=cta.querySelector('.rot');if(!rot)return;
+    var tw=rot.querySelector('.tw'),G='/!<>-_\\[]{}=+*^?#',wi=0,t=0,raf=0,vis=false,busy=false,D=800,HOLD=1500;
+    function words(){return rot.dataset.words.split('|').map(function(w){return w.trim()})}
+    var ws=words();
+    if(reduce)return;
+    function rnd(n){var s='';for(var i=0;i<n;i++)s+=G[Math.floor(Math.random()*G.length)];return s}
+    function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+    function scramble(from,to,done){
+      var t0=0;busy=true;
+      (function f(now){
+        if(!t0)t0=now;var p=Math.min(1,(now-t0)/D),e=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
+        var n=Math.floor(e*to.length),len=Math.round(from.length+(to.length-from.length)*e),rest=Math.max(0,len-n);
+        tw.innerHTML=esc(to.slice(0,n))+(rest?'<span class="sc">'+esc(rnd(rest))+'</span>':'');
+        if(p<1){raf=requestAnimationFrame(f)}else{tw.textContent=to;busy=false;done()}
+      })(performance.now());
+    }
+    function next(){var nw=words();if(nw.join()!==ws.join()){ws=nw;wi=0;tw.textContent=ws[0]}var a=ws[wi];wi=(wi+1)%ws.length;scramble(a,ws[wi],function(){if(vis&&!document.hidden)t=setTimeout(next,HOLD)})}
+    function run(){if(busy)return;clearTimeout(t);if(vis&&!document.hidden)t=setTimeout(next,HOLD)}
+    if('IntersectionObserver' in window)new IntersectionObserver(function(es){vis=es[0].isIntersecting;run()},{threshold:.35}).observe(cta);
+    document.addEventListener('visibilitychange',run);
+    document.addEventListener('langchange',function(){ws=words();wi=0;tw.textContent=ws[0]});
+  })();
+
+  /* ---------- image lightbox (click to enlarge; wheel / pinch / double-tap to zoom; drag to pan) ---------- */
+  var lb=document.createElement('div');lb.className='lb';lb.hidden=true;lb.setAttribute('role','dialog');lb.setAttribute('aria-modal','true');lb.setAttribute('aria-label','圖片檢視');
+  lb.innerHTML='<div class="lb-stage"><img alt=""></div><button type="button" class="lb-x" aria-label="關閉"><svg><use href="#i-close"/></svg></button>';
+  document.body.appendChild(lb);
+  var stage=lb.querySelector('.lb-stage'),lbi=lb.querySelector('img'),xb=lb.querySelector('.lb-x');
+  var S=1,X=0,Y=0,opener=null,pts={},pinch0=null,dragMoved=false,lastTap=0;
+  function apply(){lbi.style.transform='translate('+X+'px,'+Y+'px) scale('+S+')'}
+  function clampPan(){var r=lbi.getBoundingClientRect(),w=r.width,h=r.height,sw=stage.clientWidth,sh=stage.clientHeight;var mx=Math.max(0,(w-sw)/2+60),my=Math.max(0,(h-sh)/2+60);X=Math.max(-mx,Math.min(mx,X));Y=Math.max(-my,Math.min(my,Y))}
+  function zoomAt(ns,cx,cy){ns=Math.max(1,Math.min(6,ns));var r=stage.getBoundingClientRect(),ox=cx-(r.left+r.width/2),oy=cy-(r.top+r.height/2);var k=ns/S;X=ox-(ox-X)*k;Y=oy-(oy-Y)*k;S=ns;if(S<=1.001){S=1;X=0;Y=0}apply();if(S>1){lbi.style.transition='none'}}
+  function openLb(img){
+    opener=img;lbi.onload=function(){var k=Math.min((stage.clientWidth-32)/lbi.naturalWidth,(stage.clientHeight-24)/lbi.naturalHeight,3);lbi.style.width=Math.round(lbi.naturalWidth*k)+'px';lbi.style.height=Math.round(lbi.naturalHeight*k)+'px'};lbi.removeAttribute('style');lbi.src=img.currentSrc||img.src;lbi.alt=img.alt||'';S=1;X=0;Y=0;apply();
+    lb.hidden=false;document.documentElement.classList.add('lb-open');requestAnimationFrame(function(){lb.classList.add('on')});xb.focus({preventScroll:true});
+  }
+  function closeLb(){lb.classList.remove('on');document.documentElement.classList.remove('lb-open');setTimeout(function(){lb.hidden=true;lbi.removeAttribute('src')},200);if(opener&&opener.focus)opener.focus({preventScroll:true})}
+  xb.addEventListener('click',closeLb);
+  document.addEventListener('keydown',function(e){if(lb.hidden)return;if(e.key==='Escape')closeLb();else if(e.key==='+'||e.key==='='){var r=stage.getBoundingClientRect();zoomAt(S*1.3,r.left+r.width/2,r.top+r.height/2)}else if(e.key==='-'){var r2=stage.getBoundingClientRect();zoomAt(S/1.3,r2.left+r2.width/2,r2.top+r2.height/2)}});
+  stage.addEventListener('wheel',function(e){e.preventDefault();zoomAt(S*Math.exp(-e.deltaY*(e.ctrlKey?0.01:0.0022)),e.clientX,e.clientY)},{passive:false});
+  stage.addEventListener('pointerdown',function(e){stage.setPointerCapture(e.pointerId);pts[e.pointerId]={x:e.clientX,y:e.clientY};dragMoved=false;if(Object.keys(pts).length===2){var p=Object.keys(pts).map(function(k){return pts[k]});pinch0={d:Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y),s:S}}stage.classList.add('pan')});
+  stage.addEventListener('pointermove',function(e){
+    var p=pts[e.pointerId];if(!p)return;var ids=Object.keys(pts);
+    if(ids.length===2&&pinch0){pts[e.pointerId]={x:e.clientX,y:e.clientY};var a=pts[ids[0]],b=pts[ids[1]];var d=Math.hypot(a.x-b.x,a.y-b.y);zoomAt(pinch0.s*d/pinch0.d,(a.x+b.x)/2,(a.y+b.y)/2);dragMoved=true;return}
+    var dx=e.clientX-p.x,dy=e.clientY-p.y;pts[e.pointerId]={x:e.clientX,y:e.clientY};
+    if(Math.abs(dx)+Math.abs(dy)>1)dragMoved=true;
+    if(S>1){X+=dx;Y+=dy;clampPan();apply()}
+  });
+  function up(e){delete pts[e.pointerId];if(Object.keys(pts).length<2)pinch0=null;if(!Object.keys(pts).length)stage.classList.remove('pan')}
+  stage.addEventListener('pointerup',function(e){
+    var wasTap=!dragMoved;up(e);if(!wasTap)return;
+    var r=lbi.getBoundingClientRect(),onImg=e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom;
+    if(!onImg){closeLb();return}
+    var now=Date.now();if(now-lastTap<300){zoomAt(S>1?1:2.5,e.clientX,e.clientY);lastTap=0}else lastTap=now;
+  });
+  lb.addEventListener('click',function(e){if(e.target===lb)closeLb()});
+  stage.addEventListener('pointercancel',up);
+  lbi.addEventListener('dblclick',function(e){e.preventDefault()});
+  // zoom only from the journey-map section onward; design-guide card opens as one overview
+  var ZA=[].slice.call(document.querySelectorAll('h3')).filter(function(h){return h.textContent.indexOf('使用者旅程地圖')>-1})[0];
+  (function(){
+    var gh=[].slice.call(document.querySelectorAll('h3')).filter(function(h){return h.textContent.indexOf('設計指南')>-1})[0];
+    var sec=gh&&gh.closest('section'),card=sec&&sec.querySelector('.card');if(!card)return;
+    card.classList.add('zall');
+    var w=document.createElement('div');w.className='zwrap';card.parentNode.insertBefore(w,card);w.appendChild(card);
+    w.setAttribute('role','button');w.setAttribute('tabindex','0');w.setAttribute('aria-label','放大檢視：設計模板與風格全覽');
+    function openAll(){
+      var imgs=[].slice.call(card.querySelectorAll('.ph img')).filter(function(i){return i.naturalWidth});if(!imgs.length)return;
+      var cw=Math.max.apply(null,imgs.map(function(i){return i.naturalWidth})),hs=imgs.map(function(i){return Math.round(i.naturalHeight*cw/i.naturalWidth)}),H=Math.max.apply(null,hs);
+      var c=document.createElement('canvas');c.width=cw*imgs.length;c.height=H;var x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);
+      imgs.forEach(function(i,k){x.drawImage(i,k*cw,0,cw,hs[k])});
+      var t=new Image();t.alt='設計模板與風格全覽';t.onload=function(){openLb(t)};
+      try{c.toBlob(function(b){t.src=URL.createObjectURL(b)})}catch(e){t.src=c.toDataURL('image/png')}
+    }
+    w.addEventListener('click',openAll);w.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();openAll()}});
+  })();
+  // wire up content images (skip tiny icons / logos)
+  document.querySelectorAll('.ph img').forEach(function(i){
+    var ph=i.parentNode;if(ph.classList.contains('sm')||ph.closest('.bz')||i.closest('.zall'))return;if(ZA&&!(ZA.compareDocumentPosition(i)&Node.DOCUMENT_POSITION_FOLLOWING))return;
+    i.setAttribute('data-zoom','');i.setAttribute('role','button');i.setAttribute('tabindex',ph.classList.contains('ivph')?'-1':'0');i.setAttribute('aria-label','放大檢視：'+(i.alt||''));
+    i.addEventListener('click',function(){openLb(i)});
+    i.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();openLb(i)}});
+  });
+})();
+</script>
+<script>
+/* hover previews for footer side projects + cursor label on project cards (mouse only) */
+(function(){
+  var fine=window.matchMedia('(hover:hover) and (pointer:fine)');
+  var reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var pv=document.createElement('div');pv.className='pv';pv.setAttribute('aria-hidden','true');pv.innerHTML='<div><img alt=""><span class="cap"><b></b><small></small></span></div>';
+  var cur=document.createElement('div');cur.className='cur';cur.setAttribute('aria-hidden','true');cur.innerHTML='<div><span></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></div>';
+  document.body.appendChild(pv);document.body.appendChild(cur);
+  var mx=0,my=0,px=0,py=0,cx=0,cy=0,raf=0,mode=null,first=true;
+  function place(){
+    raf=0;var k=reduce||first?1:.22;first=false;
+    if(mode==='pv'){var w=240,tx=mx+24,ty=my-w/2;if(tx+w>innerWidth-12)tx=mx-24-w;ty=Math.max(12,Math.min(innerHeight-w-12,ty));px+=(tx-px)*k;py+=(ty-py)*k;pv.style.transform='translate3d('+px+'px,'+py+'px,0)';if(Math.abs(tx-px)+Math.abs(ty-py)>.5)raf=requestAnimationFrame(place)}
+    if(mode==='cur'){var tx2=mx+16,ty2=my+20,cw=cur.firstChild.offsetWidth;if(tx2+cw>innerWidth-12)tx2=mx-16-cw;cx+=(tx2-cx)*k;cy+=(ty2-cy)*k;cur.style.transform='translate3d('+cx+'px,'+cy+'px,0)';if(Math.abs(tx2-cx)+Math.abs(ty2-cy)>.5)raf=requestAnimationFrame(place)}
+  }
+  function go(){if(!raf)raf=requestAnimationFrame(place)}
+  document.addEventListener('pointermove',function(e){if(e.pointerType!=='mouse'||!fine.matches)return;mx=e.clientX;my=e.clientY;go()},{passive:true});
+  function bind(sel,fn){[].forEach.call(document.querySelectorAll(sel),fn)}
+  bind('[data-pv]',function(a){
+    var im=new Image();im.src=a.dataset.pv;
+    a.addEventListener('pointerenter',function(e){if(e.pointerType!=='mouse'||!fine.matches)return;pv.querySelector('img').src=a.dataset.pv;pv.querySelector('b').textContent=a.dataset.pvT||'';pv.querySelector('small').textContent=(a.dataset.pvS||'')+' · Behance';mode='pv';first=!pv.classList.contains('on');mx=e.clientX;my=e.clientY;place();pv.classList.add('on')});
+    a.addEventListener('pointerleave',function(){pv.classList.remove('on');if(mode==='pv')mode=null});
+  });
+  bind('[data-cursor]',function(a){
+    a.addEventListener('pointerenter',function(e){if(e.pointerType!=='mouse'||!fine.matches)return;cur.querySelector('span').textContent=a.dataset.cursor;mode='cur';first=!cur.classList.contains('on');mx=e.clientX;my=e.clientY;place();cur.classList.add('on')});
+    a.addEventListener('pointerleave',function(){cur.classList.remove('on');if(mode==='cur')mode=null});
+  });
+  addEventListener('scroll',function(){pv.classList.remove('on');cur.classList.remove('on');mode=null},{passive:true});
+})();
+</script>
+<script>
+/* small-screen menu: panel grows out of the hamburger, links fade in */
+(function(){
+  var hb=document.getElementById('hb'),nav=document.getElementById('mnav'),bd=document.getElementById('mnavbd'),x=document.getElementById('mnavx');if(!hb||!nav)return;
+  var root=document.documentElement,tm=0;
+  function open(){clearTimeout(tm);nav.hidden=false;bd.hidden=false;void nav.offsetWidth;nav.classList.add('on');bd.classList.add('on');root.classList.add('lb-open');hb.setAttribute('aria-expanded','true');setTimeout(function(){x.focus({preventScroll:true})},60)}
+  function close(back){nav.classList.remove('on');bd.classList.remove('on');root.classList.remove('lb-open');hb.setAttribute('aria-expanded','false');tm=setTimeout(function(){nav.hidden=true;bd.hidden=true},420);if(back)hb.focus({preventScroll:true})}
+  hb.addEventListener('click',open);x.addEventListener('click',function(){close(true)});bd.addEventListener('click',function(){close(true)});
+  nav.addEventListener('click',function(e){if(e.target.closest('a'))close(false)});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&nav.classList.contains('on'))close(true)});
+  addEventListener('resize',function(){if(innerWidth>820&&nav.classList.contains('on'))close(false)});
+})();
+</script>
+<script type="application/json" id="i18n">{"__title": "Subway App Case Study", "回到作品集主頁": "Back to portfolio home", "產品設計師": "Product Designer", "網站導覽": "Site navigation", "作品": "Work", "關於": "About", "履歷": "Résumé", "寄信給我": "Email me", "下載履歷": "Download résumé", "透過客製化熱量平衡與狀態即時化，重塑現代外食族無負擔的點餐體驗": "Rethinking ordering for people who eat out, with live calorie balance and real-time store status", "Subway App 案例封面": "Subway App case study cover", "角色": "Role", "UX/UI 設計師": "UX/UI Designer", "獨立主導端到端設計": "Led end-to-end design solo", "範圍": "Scope", "競爭分析、顧客探索、人物誌、資訊架構、行動裝置原型設計": "Competitive analysis, customer discovery, personas, information architecture, mobile prototyping", "工具": "Tools", "Figma、Notion、Slack、Miro、Google Meet": "Figma, Notion, Slack, Miro, Google Meet", "年份": "Year", "2022 (4 個月)": "2022 (4 months)", "/* 問題 */": "/* Problem */", "線下實體數位化轉型遲滯，無法跟上現代人需求": "A store-first chain that hasn't kept up digitally", "Subway 在 2010 年成為全世界最多連鎖店的三明治品牌。隨著數位時代興起及顧客飲食習慣的改變，「新鮮」和「健康」已經不是顧客唯一關心的部分。": "In 2010 Subway became the sandwich brand with the most locations in the world. As ordering went digital and eating habits changed, “fresh” and “healthy” stopped being the only things customers cared about.", "當代外食族生活節奏緊湊且高度注重飲食健康，在臨櫃點餐或傳統點單時面臨三大關鍵斷點：": "Busy, health-conscious people who eat out hit three key breakdowns when ordering at the counter:", "選擇障礙焦慮：客製化步驟多達 6 步，隊伍後方凝視造成臨櫃壓力。": "Choice anxiety: up to 6 customization steps, with a queue watching from behind.", "熱量資訊斷層：缺乏即時累計，無法在美味與體態管理間取得平衡。": "No calorie feedback: nothing adds up as you go, so it's hard to balance taste and diet.", "門市現況黑盒子：現場缺料或尖峰排隊無從得知，撲空造成強烈挫折。": "Store status is a black box: sold-out items and rush-hour queues are invisible until you arrive.", "目標摩擦點：嚴重性高": "Friction severity: high", "/* 解決方案 */": "/* Solution */", "以即時熱量回饋與備餐透明化，建構「自適應線上點餐生態」": "Live calorie feedback and transparent prep times, in one adaptive ordering app", "打造 Subway iOS 點餐系統，把複雜的客製化流程解構為清晰引導，並賦予使用者對自身營養攝取與取餐節奏的掌控感。": "An iOS ordering app for Subway that breaks complex customization into clear guided steps and gives people control over their nutrition and pickup timing.", "透過提供餐點推薦與熱量顯示，讓使用者在整個訂餐過程中能放心且快速完成點餐，有個無憂無慮挖掘美食、平衡罪惡感的點餐經驗。": "Meal recommendations and calorie display let people order quickly and confidently, exploring food they enjoy without the guilt.", "即時客製化熱量條：配料增減隨時重算，動態色條呈現警戒與平衡。": "Live calorie bar: recalculates with every topping, with color showing balance or warning.", "智慧餐點需求推薦：以「增肌/低碳/美味不忌口」情境快速切入。": "Smart recommendations: start from goals like “build muscle”, “low carb” or “just tasty”.", "門市人潮與庫存可視化：即時標註備餐等待分鐘數與食材售完預警。": "Store crowds and stock: live wait times and sold-out warnings.", "色彩代碼快速取餐：取餐單採用雙色塊與顯著編號，店員 3 秒核對。": "Color-coded pickup: two-color blocks and a large number let staff match orders in 3 seconds.", "設計假設：在可用性驗證中驗證": "Design hypothesis: validated in usability testing", "/* 流程 */": "/* Process */", "本案研究的流程": "How this case study is organized", "本案分為上下兩篇。本篇包含探索、洞察、問題定義＆發想與原型；若想查看易用性測試、迭代後原型與學習與挑戰，請": "This case study has two parts. This page covers discovery, insights, problem definition & ideation, and prototyping. For usability testing, the iterated prototype and lessons learned,", "點擊此處": "go to part 2", "。": ".", "上篇・研究＆設計（本頁）": "Part 1 · Research & Design (this page)", "探索": "Discover", "洞察": "Insights", "問題定義＆發想": "Define & Ideate", "原型": "Prototype", "下篇・易用性測試": "Part 2 · Usability Testing", "易用性測試": "Usability testing", "迭代後原型": "Iterated prototype", "學習與挑戰": "Lessons & challenges", "設計人們願意使用的線上點餐服務": "Designing an ordering service people want to use", "這階段我以顧客與市場探索幫助我完成以下目標：": "In this phase, customer and market research helped me:", "市場探索": "Market research", "線上平台的介面設計": "Review interfaces of online platforms", "競爭者分析": "Analyze competitors", "顧客探索": "Customer research", "了解目標族群有哪些": "Identify target groups", "驗證初步假設": "Test initial assumptions", "了解外食影響因素": "Understand what drives eating-out choices", "線上平台的體驗感受": "Learn how people feel about online platforms", "/* 市場調查 */": "/* Market research */", "我可以做得更好嗎？": "Can I do better?", "藉由販賣同商品的平台與同為速食的專賣平台作競爭者分析，分別進行認知走查與易用性調查，釐清設計目標是否幫助使用者輕鬆解決問題，同時確認既有的解決方式。深入分析台灣主流外送平台與餐飲直營應用程式，歸納出當前市場在「高度客製化」與「進度掌握」上的系統性缺口。": "I ran cognitive walkthroughs and usability reviews on delivery platforms that sell the same products and on fast-food brands' own apps, to see whether they help people solve the problem and how. Comparing Taiwan's main delivery platforms with restaurant-owned apps showed a consistent gap in deep customization and order-progress visibility.", "外送聚合應用程式圖示 1": "Delivery app icon 1", "外送聚合應用程式圖示 2": "Delivery app icon 2", "外送聚合應用程式圖示 3": "Delivery app icon 3", "外送聚合應用程式": "Delivery aggregator apps", "斷點 1：滑動方向與介面階層不一致": "Breakdown 1: inconsistent scroll directions and hierarchy", "水平橫滑推薦與垂直直滑選單穿插，導致客製化流程（選麵包、蔬菜、醬料）在長表單中被截斷，跳出率高。": "Horizontal carousels mixed with vertical menus break up customization (bread, veggies, sauces) in long forms, and people drop off.", "斷點 2：缺乏營養與食材標示細節": "Breakdown 2: missing nutrition and ingredient details", "僅以純文字核取方塊條列配料，無法看到醬料卡路里或鈉含量，對控糖或健身族群極不友善。": "Toppings are plain-text checkboxes with no calories or sodium for sauces, which is hard for anyone watching sugar or training.", "客製化完整度：低（僅限單選/複選表單）": "Customization depth: low (single/multi-select forms only)", "直營品牌專賣應用程式圖示 1": "Brand app icon 1", "直營品牌專賣應用程式圖示 2": "Brand app icon 2", "直營品牌專賣應用程式圖示 3": "Brand app icon 3", "直營品牌專賣應用程式": "Restaurant-owned apps", "斷點 1：無法掌握門市即時製作負載": "Breakdown 1: no view of the store's live workload", "訂單送出後僅顯示預估「約 15 分鐘」，無法即時得知店內正處於尖峰或現場已無某項特殊麵包。": "After ordering you only see “about 15 minutes”, with no sign that the store is slammed or out of a certain bread.", "斷點 2：預約機制僵化與取餐核對慢": "Breakdown 2: rigid pre-orders and slow pickup checks", "到店後仍需尋找收據或報手機末三碼，在嘈雜人潮中常常造成店員翻找餐點與使用者等候的雙重延遲。": "At the store you still dig for a receipt or read out phone digits, so staff search for orders while customers wait in the noise.", "透明度與狀態即時回饋：中等（定時刷新，缺乏微狀態）": "Transparency & live status: medium (periodic refresh, no micro-states)", "維度": "Dimension", "Subway 設計案（本案）": "Subway design (this project)", "客製化步驟指引": "Customization guidance", "長表單核選（易漏選）": "Long checklist (easy to miss)", "步驟分頁（稍嫌冗長）": "Step pages (a bit long)", "步驟導覽＋即時動態條": "Step navigation + live progress bar", "熱量/營養即時回饋": "Live calorie/nutrition feedback", "無（僅靜態熱量文字）": "None (static calorie text)", "無（需另外查營養表）": "None (separate nutrition table)", "隨選隨增減（即時數值）": "Updates with each pick (live values)", "取餐識別與防呆": "Pickup ID & error-proofing", "訂單號碼純文字": "Plain-text order number", "條碼 / 取餐號": "Barcode / pickup number", "色彩編碼＋大字號動態單": "Color code + large-number ticket", "/* 顧客探索 */": "/* Customer research */", "線上點餐需提供哪些服務來提升造訪率？": "What would make people order online more often?", "初步假設：如果提供下列服務，消費者會更頻繁造訪 Subway 平台": "Initial hypothesis: people would use Subway's platform more often if it offered", "提供餐點熱量供參考": "Calorie information for meals", "明確的餐點等候時間": "Clear wait times", "店家、餐點現況（供應餐點、人潮、等候時間）": "Store status (availability, crowds, wait time)", "趨勢與話題的品牌認同度（新商品、聯名商品）": "Trendy brand moments (new items, collaborations)", "/* 問卷洞察 */": "/* Survey insights */", "篩選目標族群與了解消費者的飲食習慣": "Finding the target group and their eating habits", "以 Google 線上問卷回收 80 份質性與量化混合問卷，收集基本資料、外食頻率、考量因素及購買方式，同時了解線上訂餐系統的使用因素與痛點。": "A Google Forms survey collected 80 mixed qualitative and quantitative responses on demographics, how often people eat out, what they consider and how they buy, plus what drives and frustrates online ordering.", "購買方式": "How they buy", "手機點餐": "Mobile order", "到店購買": "In store", "次級研究發現手機點餐有成長趨勢，Subway App 有發展的必要": "Desk research shows mobile ordering is growing, so a Subway app is worth building", "考量因素": "What matters", "美味度": "Taste", "價格": "Price", "美味度與 Subway 客戶主要購買原因相符": "Taste matches the main reason Subway customers buy", "困擾": "Frustrations", "選擇障礙": "Choice overload", "時間無法掌握": "Unpredictable timing", "線上點餐產品可以切入的服務內容": "Where an online ordering product can help", "/* 使用者訪談 */": "/* User interviews */", "你能告訴我你購買 Subway 的過程嗎？": "Can you walk me through how you buy Subway?", "透過問卷邀請了 5 位對購買 Subway 具有不同熟悉度的人進行訪談，數據揭示了強烈的需求矛盾：渴望方便，卻飽受點餐壓力與健康焦慮折磨。": "I interviewed 5 survey respondents with different levels of Subway experience. A clear tension emerged: they want convenience, but feel ordering pressure and health anxiety.", "目標族群": "Target group", "每週外食 6 天以上": "Eat out 6+ days a week", "重視健康與美味度": "Care about health and taste", "15~29 歲女性": "Women aged 15–29", "購買過 Subway": "Have bought Subway before", "訪談目標": "Interview goals", "了解挑選餐點的考量因素和過程": "Understand how they choose a meal", "揭示人們可能面臨的常見痛點": "Surface common pain points", "如何使用應用程式或網站幫助他們實現目標": "See how apps or sites could help them", "操作方式": "Method", "實際操作：於店面或線上購買": "Observed tasks: buying in store or online", "微表情觀察：追問當下行為與情緒": "Micro-expressions: follow-up on behavior and feelings", "開放式問答：對現有管道的想法與痛處": "Open questions: thoughts and pain points with current options", "訪談畫面": "Interview screenshots", "訪談 Carina": "Interview with Carina", "訪談 Mei": "Interview with Mei", "訪談 Sinny": "Interview with Sinny", "訪談 Wen": "Interview with Wen", "「Subway，所以有固定的喜好餐點，但到了店面點餐時才知道沒有要的餐點內容了，這使我失望及浪費時間。」": "“I have a usual Subway order, but sometimes I only find out at the counter that they're out of what I want. It's disappointing and a waste of time.”", "—25 歲重視健康的女學生 Carina": "— Carina, 25, health-conscious student", "「餐點如果有提供熱量，會幫助我更快的選擇餐點和維持飲食。」": "“If meals showed calories, I could choose faster and stick to my diet.”", "—26 歲控制體重的上班族 Mei": "— Mei, 26, office worker watching her weight", "「因為直接去店面點餐比較快，所以我比較少使用線上訂餐，但用餐時段都要排隊也是蠻煩的。」": "“Ordering in store is faster, so I rarely order online. But queuing at lunchtime is annoying.”", "—26 歲重視效率的上班族 Sinny": "— Sinny, 26, efficiency-minded office worker", "「三角切片起司和切絲巧達起司的差別是？沒有照片不知道差異在哪。」": "“What's the difference between sliced cheese and shredded cheddar? Without photos I can't tell.”", "—25 歲常加班的上班族 Wen": "— Wen, 25, office worker who often works late", "訪談見解": "Interview insights", "將訪談數據整理成使用者的行為、思考和感受後，得出關鍵見解：": "Sorting the interviews into what people do, think and feel produced these key insights:", "餐點敘述標示不清": "Unclear meal descriptions", "/* 洞察 1 */": "/* Insight 1 */", "餐點與配料標示不清": "Unclear meals and toppings", "3 位受訪者有此困擾，無法從餐名知曉內容物並立即判斷點餐內容，難以快速判斷並點餐。": "3 interviewees couldn't tell what's in a meal from its name, so deciding and ordering took longer.", "無法掌握店家現況": "No view of store status", "/* 洞察 2 */": "/* Insight 2 */", "不清楚門市現況而撲空": "Wasted trips without store status", "4 位受訪者到了店家才知道人潮多寡或商品已售完，缺乏門市現場即時負載與原料庫存資訊，感到沮喪和無奈，是使用者放棄消費的主因。": "4 interviewees only learned about crowds or sold-out items on arrival. Without live load and stock info they felt frustrated, and this was the main reason they gave up on buying.", "期望看到餐點熱量": "Wanting to see calories", "/* 洞察 3 */": "/* Insight 3 */", "自選時想即時看到熱量": "Live calories while customizing", "受訪者皆認為熱量有助於他們挑選餐點並感到安心，熱量數據不該是事後的懲罰或獨立的 PDF 查閱表，而應該是「當下幫助決策」的心理錨點。": "Every interviewee said calories help them choose and feel at ease. Calorie data shouldn't be an after-the-fact penalty or a separate PDF, but an anchor that helps decide in the moment.", "重新檢視假設": "Revisiting the assumptions", "根據調查與訪談的見解重新檢視初步假設，修正用字並更精確聚焦在主要影響使用者的項目上，確保設計決策以使用者為中心，並幫助建立人物誌。": "I revisited the initial assumptions against the survey and interview findings, sharpening them around what affects users most. This kept decisions user-centered and fed into the personas.", "初步假設": "Initial assumption", "修正假設": "Revised assumption", "提供餐點熱量與內容敘述，以快速了解餐點": "Show calories and contents so meals are quick to understand", "明確的點餐介面、指引與內容，加速點餐效率": "Clear ordering screens and guidance to speed things up", "提供餐點篩選服務，幫助餐點選擇": "Filters that help people choose", "/* 人物誌 */": "/* Personas */", "三位代表人物：以 Mia 為主要角色": "Three personas, with Mia as the primary", "依據訪談資料提煉出代表性人物誌「無固定飲食習慣的大學生 Mia」——在控制身材與犒賞自己之間拉扯，期望快速滿足口腹之慾卻害怕踏入選餐地雷；Bella 與 Daya 為次要角色。": "From the interviews came the primary persona, Mia, a college student with no fixed eating habits. She's torn between watching her figure and treating herself, and wants a quick satisfying meal without picking wrong. Bella and Daya are secondary personas.", "Mia｜無固定飲食習慣": "Mia | No fixed eating habits", "主要角色": "Primary", "21 歲・國立大學大三學生・外食比例 85%・著重平衡罪惡感與無憂挖掘美食": "21 · Third-year university student · Eats out 85% of the time · Wants to explore food without the guilt", "Mia 人物照片": "Photo of Mia", "品牌": "Brands", "吃貨": "Foodie", "沒有固定飲食方式": "No fixed diet", "好奇心強": "Curious", "「如果有人能先幫我算好、配好，我只要按兩下手機，就能在去學校的路上抓了就走，這才是理想的數位點餐。」": "“If someone worked it all out for me, I'd tap twice on my phone and grab it on the way to class. That's ideal digital ordering.”", "關鍵痛點": "Key pain points", "不想在人群前慢慢研究醬料成分": "Doesn't want to study sauce ingredients in front of a queue", "到店才發現缺料，臨時改菜單很焦慮": "Finds items sold out at the store and panics changing her order", "擔心點了高熱量醬料，下午充滿罪惡感": "Worries a high-calorie sauce will ruin her afternoon with guilt", "目標需求": "Goals", "找到快速、清爽不油膩的餐點": "Find a quick, light, non-greasy meal", "清楚知道一餐的熱量與蛋白質": "Know a meal's calories and protein", "課間 20 分鐘內準時拿到餐點": "Get her food within a 20-minute class break", "對應應用程式功能": "Matching app features", "依需求推薦餐點": "Goal-based recommendations", "建議熱量條": "Calorie guide bar", "掌握店家即時情況": "Live store status", "快速取餐辨識": "Fast pickup ID", "Bella｜正在改變飲食習慣": "Bella | Changing her eating habits", "次要角色": "Secondary", "26 歲・雜誌社編輯・台北獨自租屋": "26 · Magazine editor · Lives alone in Taipei", "人物照片": "Photo", "「減重的同時，能夠建立健康飲食觀念，讓身材變好的同時，也能變得更加健康。」": "“While losing weight I want to build healthy eating habits, so I get in shape and get healthier too.”", "持續漸進減重，找到適合自己的飲食型態": "Lose weight gradually and find a diet that fits", "減重後維持良好體態": "Keep the weight off afterwards", "想要小份、清爽、無澱粉的選擇，午餐常是大份主餐加澱粉，吃不完": "Wants small, light, low-carb options; lunch is usually a big carb-heavy portion she can't finish", "為了控制攝取，需要看到餐點熱量與內容標示，也擔心吃到牛製品": "Needs calories and contents to control intake, and avoids beef", "不清楚飲食上該注意什麼，又不想花時間調查": "Unsure what to watch for and doesn't want to research it", "餐點內容標示與篩選": "Meal labels & filters", "Daya｜有固定飲食習慣": "Daya | Has steady eating habits", "28 歲・遠端工作者・台北租屋且與室友同住": "28 · Remote worker · Shares a flat in Taipei", "「找到符合自己飲食需求的餐廳，又同時能解決選擇障礙困擾，是目前最大的需求！」": "“What I need most is a place that fits my diet and also cures my choice paralysis!”", "維持健康飲食與良好體態": "Keep eating healthily and stay in shape", "外食菜色少又油，自己開伙又花時間": "Eating out is greasy with few options; cooking takes time", "希望有店家能讓她自己搭配均衡飲食": "Wants a place where she can build a balanced meal", "有選擇障礙，希望有健康餐點推薦": "Struggles to choose and wants healthy suggestions", "運動後或不知道吃什麼時會選超商，方便快速，但餐點內容固定、選項少": "After workouts she grabs convenience-store food: fast, but few, fixed options", "簡化重複點餐的流程": "Faster reorders", "/* 使用者旅程地圖 */": "/* User journey map */", "Mia 對 Subway 的體驗感到如何？": "How does Mia experience Subway?", "目標": "Goal", "省時省力地用線上點餐系統點餐並前往店家取餐。期望流程具備：快速點餐、明確的取餐時間、適合自己的餐點選項。": "Order online with minimal effort and pick up in store. She expects quick ordering, a clear pickup time and options that suit her.", "背景": "Context", "夏季接近中午時，Mia 在學校想來點清爽低熱量的餐點，為了避開人潮，決定先線上點餐再到店面取餐。": "Near noon on a summer day, Mia wants something light and low-calorie at school. To avoid the crowd, she orders online first and picks up in store.", "使用者旅程地圖": "User journey map", "Mia 的使用者旅程地圖": "Mia's user journey map", "/* 洞察見解 */": "/* Insights */", "影響使用者心情的痛點與假設": "Pain points that shape how users feel", "依峰終定律，將對使用者留下印象的關係強度依序排列：": "Ranked by the peak-end rule, from the moments that leave the strongest impression:", "最後一步驟｜無法掌握店家實際狀況": "End moment | No view of real store status", "明確的店家、餐點實際狀況（供應餐點、人潮狀況、等候時間）": "Clear store status (availability, crowds, wait time)", "快樂高峰｜無法有效選擇餐點": "Peak moment | Hard to choose a meal", "提供餐點篩選服務；提供餐點熱量與內容敘述": "Filters; calories and meal descriptions", "整體流程｜點餐順序雜亂": "Overall flow | Messy ordering sequence", "問題陳述的修訂": "Revised problem statement", "根據假設問題與人物誌的陳述，定義整個專案的目標，以更好地與使用者需求保持一致。": "Based on the hypotheses and personas, I defined the project goal to stay closely aligned with user needs.", "「常使用社群的吃貨大學生 Mia，需要一個可以讓她無憂無慮挖掘美食、平衡罪惡感的點餐經驗，因為吃美食是她的快樂來源之一，但吃多身材走樣導致的焦慮感，會影響她獲取吃美食的快樂。」": "“Mia, a social-media-savvy foodie student, needs an ordering experience that lets her explore food freely without guilt, because good food is one of her joys, but worrying about her figure takes that joy away.”", "如何找到關鍵 HMW？": "Finding the key HMW", "通過 10 大激盪方向發想專案問題與可能的領域，找學習 UI/UX 的朋友投票獲取反饋，並依對專案的重要性與點餐流程排列，找出能提供最大效益的點子。": "I brainstormed across 10 directions, had fellow UI/UX learners vote, then ranked ideas by importance and by where they fall in the ordering flow to find the highest-impact ones.", "HMW｜10 大激盪方向與投票結果": "HMW | 10 directions and voting results", "HMW 10 大激盪方向與投票結果": "HMW: 10 directions and voting results", "「我們何不提供可以快速依需求調整的客製化餐點選項，去幫助在意體態變化的 Mia 滿足需求？」": "“How might we offer customization that adapts quickly to goals, so a figure-conscious Mia gets what she wants?”", "如何決定發展點子？": "Choosing which ideas to develop", "以 Crazy8 快速發想並投票，再依點子對使用者及商業端的重要度篩選，找到能發揮最大效益的點子。": "Quick Crazy 8s and a vote, then filtering by value to users and the business, to find the ideas with the most impact.", "快速發想｜Crazy8": "Quick ideation | Crazy 8s", "快速發想 Crazy8": "Quick ideation: Crazy 8s", "/* 快速發想 */": "/* Diverge */", "進行快速發想，找到切入方向": "Rapid sketching to find an angle", "收斂發想｜四象限圖": "Converge | Impact matrix", "收斂發想 四象限圖": "Converge: impact matrix", "/* 收斂發想 */": "/* Converge */", "四象限圖": "Impact matrix", "篩選與排序對使用者端及商業端有高影響度的 HMW": "Sort HMWs by impact on users and the business", "收斂發想｜點餐流程與重要程度": "Converge | Ordering flow & priority", "收斂發想 點餐流程與重要程度": "Converge: ordering flow and priority", "點餐流程與重要程度": "Ordering flow & priority", "依重要度排列，選出能幫助 Mia 的點子": "Rank by importance and pick the ideas that help Mia", "什麼對 Mia 最有幫助？": "What helps Mia most?", "/* 功能 1 */": "/* Feature 1 */", "依肉料、口味、熱量等需求給予餐點與醬料推薦 → 幫助 Mia 快速依需求調整客製化餐點": "Recommends meals and sauces by protein, flavor and calories → helps Mia customize to her goals quickly", "/* 功能 2 */": "/* Feature 2 */", "配合挑選餐點項目增減熱量 → 幫助 Mia 快速了解客製化餐點熱量": "Calories update with every pick → Mia always knows what her meal adds up to", "/* 功能 3 */": "/* Feature 3 */", "掌握店家與訂單即時情況": "Live store & order status", "確認店家等待人數及餐點狀況，避免事後才知道要等很久 → 幫助 Mia 掌握店家的實際狀況": "Shows queue length and availability up front → Mia knows the real situation before she goes", "/* 功能 4 */": "/* Feature 4 */", "除取餐編號外，以顏色幫助店員快速辨識，提升取餐速度 → 幫助 Mia 減少與人接觸的時間": "Adds a color code to the pickup number so staff spot orders fast → less time waiting at the counter", "/* 使用者流程 */": "/* User flow */", "Mia 如何在 Subway App 上進行點餐？": "How does Mia order in the Subway app?", "繪製 Mia 的使用者流程，幫助設計保持以使用者為中心，從 Mia 的角度確認應用程式需要哪些頁面或功能。": "Mapping Mia's flow kept the design user-centered and showed, from her point of view, which screens and features the app needs.", "流程目標：點餐並完成取餐": "Flow goal: order and pick up", "註冊帳戶 → 進行熱量測試 → 完成餐點測試 → 更改餐點內容 → 送出訂單 → 完成取餐": "Sign up → Calorie quiz → Meal quiz → Adjust the meal → Place order → Pick up", "使用者流程圖": "User flow diagram", "Mia 的使用者流程圖": "Mia's user flow diagram", "/* 線框圖 */": "/* Wireframes */", "從草圖到第一個可點擊的原型": "From sketches to the first clickable prototype", "繪製初步稿與原型並收集朋友的意見，依循目標優化介面架構：客製化餐點、主菜單、店面選擇、訂單查詢。": "I sketched and prototyped, gathered feedback from friends, and refined the structure around four areas: meal customization, main menu, store selection and order tracking.", "客製化餐點與主菜單線框圖": "Wireframes: meal customization and main menu", "店面選擇與訂單查詢線框圖": "Wireframes: store selection and order tracking", "/* 設計指南 */": "/* Design guide */", "設計模板與風格": "Templates & style", "建立設計模板以構建一致性，並在構建新功能時節省時間，改善整體流程和體驗。": "A design template keeps things consistent and saves time when adding features, improving the whole flow.", "/* 設計成果 */": "/* Result */", "操作流程展示：使用者測試之前": "Walkthrough: before user testing", "播放": "Play", "播放進度": "Playback position", "開啟聲音": "Unmute", "播放速度": "Playback speed", "全螢幕": "Full screen", "放大檢視：依需求推薦餐點操作流程": "Enlarge: goal-based recommendations flow", "依肉料、口味、熱量等需求給予餐點與醬料推薦，幫助 Mia 快速依需求調整客製化餐點": "Recommends meals and sauces by protein, flavor and calories, helping Mia customize to her goals quickly", "放大檢視：建議熱量條操作流程": "Enlarge: calorie guide bar flow", "配合挑選餐點項目增減熱量，幫助 Mia 快速了解客製化餐點熱量": "Calories update with every pick, so Mia always knows what her meal adds up to", "放大檢視：掌握店家與訂單即時情況操作流程": "Enlarge: live store & order status flow", "確認店家等待人數及餐點狀況，避免事後才知道要等很久，幫助 Mia 掌握店家的實際狀況": "Shows queue length and availability up front, so Mia knows the real situation before she goes", "放大檢視：快速取餐辨識操作流程": "Enlarge: fast pickup ID flow", "除取餐編號外，以顏色幫助店員快速辨識，提升取餐速度，幫助 Mia 減少與人接觸的時間": "Adds a color code to the pickup number so staff spot orders fast, cutting Mia's time at the counter", "案例目錄": "Case study contents", "返回": "Back", "一起聊聊你的產品、設計職缺或合作機會": "Let's talk about your product, a design role or a collaboration", "一起聊聊": "Let's talk", "你的產品|設計職缺|合作機會": "your product|a design role|a project", "你的產品": "your product", "下一篇：Subway App 易用性測試（下）": "Next: Subway App Usability Testing (part 2)", "產品設計師 · 為了相信而去質疑 · 2026 年更新": "Product Designer · Question to believe · Updated 2026", "概覽": "Overview", "即時熱量 202 kcal": "Live calories: 202 kcal", "依序選擇配料": "Pick toppings step by step", "已選內容一目了然": "See your picks at a glance", "加入購物車": "Add to cart", "聯絡": "Contact", "網站選單": "Site menu", "關閉選單": "Close menu", "開啟選單": "Open menu", "首頁": "Index", "Liya 的作品集": "Liya's Portfolio"}</script>
+<script>
+/* 中 / EN toggle: swaps every translated text node and attribute in place.
+   The language travels between portfolio pages in the link hash (#en or #en-section). */
+(function(){
+  var dict={};try{dict=JSON.parse(document.getElementById('i18n').textContent)}catch(e){}window.__T=dict;
+  var ATTR=['alt','aria-label','title','data-cursor','data-words','data-t'];
+  var nodes=[],attrs=[],btn=document.getElementById('lang'),zhTitle=document.title;
+  function collect(){
+    nodes=[];attrs=[];
+    var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode:function(n){var p=n.parentNode&&n.parentNode.nodeName;return p==='SCRIPT'||p==='STYLE'?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT}});
+    var n;while((n=w.nextNode())){var raw=n.__zh!=null?n.__zh:n.nodeValue,k=raw.trim();if(k&&dict[k]!=null){n.__zh=raw;nodes.push(n)}}
+    [].forEach.call(document.querySelectorAll('*'),function(el){ATTR.forEach(function(a){if(!el.hasAttribute(a))return;var key='__zh_'+a,raw=el[key]!=null?el[key]:el.getAttribute(a);if(dict[raw.trim()]!=null){el[key]=raw;attrs.push([el,a])}})});
+  }
+  function apply(l){
+    window.__lang=l;document.documentElement.lang=l==='en'?'en':'zh-Hant';
+    nodes.forEach(function(n){var raw=n.__zh;if(l==='en'){var m=raw.match(/^(\s*)[\s\S]*?(\s*)$/);n.nodeValue=m[1]+dict[raw.trim()]+m[2]}else n.nodeValue=raw});
+    attrs.forEach(function(p){var el=p[0],a=p[1],raw=el['__zh_'+a];el.setAttribute(a,l==='en'?dict[raw.trim()]:raw)});
+    document.title=l==='en'&&dict.__title?dict.__title:zhTitle;
+    if(btn){btn.textContent=l==='en'?'中':'EN';btn.setAttribute('aria-label',l==='en'?'切換為中文':'Switch to English');btn.title=btn.getAttribute('aria-label')}
+    [].forEach.call(document.querySelectorAll('a[data-int]'),function(a){var h=a.getAttribute('href'),base=h.split('#')[0],frag=(h.split('#')[1]||'').replace(/^en-?/,'');a.setAttribute('href',base+(l==='en'?'#en'+(frag?'-'+frag:''):(frag?'#'+frag:'')))});
+    try{localStorage.setItem('lang',l)}catch(e){}
+    document.dispatchEvent(new CustomEvent('langchange',{detail:l}));
+  }
+  var start=/^#en(-|$)/.test(location.hash)?'en':'zh';
+  collect();if(start==='en')apply('en');else if(btn){btn.textContent='EN'}
+  if(btn)btn.addEventListener('click',function(){var l=window.__lang==='en'?'zh':'en';collect();apply(l);
+    var frag=location.hash.replace(/^#en-?/,'').replace(/^#/,'');try{history.replaceState(null,'',l==='en'?'#en'+(frag?'-'+frag:''):(frag?'#'+frag:location.pathname+location.search))}catch(e){}});
+})();
+</script>
+
+
+
+</body></html>
