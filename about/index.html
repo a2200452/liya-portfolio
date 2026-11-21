@@ -766,9 +766,33 @@ html[lang="en"] .mnav-ul a{font-family:var(--f-ui)}
 /* About closing: what I'm looking for */
 .cta-sub{margin:-8px auto 0;max-width:40em;font:400 16px/27px var(--f-ui);color:var(--body);text-align:center}
 .cta-sub .mono{font:500 14px/20px var(--f-mono);color:var(--label);margin-right:6px}
-.cta h2 .rot{min-width:8.4em}
-@media (max-width:640px){.cta h2 .rot{min-width:0}}
+/* CTA rotating word: the box follows the current word so the whole line stays centred */
+.cta h2 .rot{min-width:0;position:relative;transition:width .55s cubic-bezier(.2,.7,.2,1)}
+.cta h2 .rot .tw-m{position:absolute;left:0;top:0;visibility:hidden;white-space:pre;pointer-events:none}
 .ft-in{grid-template-columns:minmax(0,1fr)}
+/* ===== breathing room (2026-11-21): section rhythm modelled on astapable.com; inside a section follow the case-page rhythm 16 / 12 / 16 ===== */
+.home .sec{gap:16px}
+.home .sec>.blk{gap:12px}
+.home{padding-top:120px;padding-bottom:64px;gap:160px}
+.hero-t{gap:32px}
+.pjs{gap:32px}
+.grid.vg{gap:20px}
+.vc{padding:36px;gap:16px}
+.cta{padding:160px 0 120px}
+@media (min-width:641px) and (max-width:1023px){.home{padding-top:96px;gap:128px}.cta{padding:128px 0 96px}}
+@media (max-width:820px){.cta{padding:96px 0 64px}}
+@media (max-width:760px){.pjs{gap:56px}.vc{padding:24px}}
+@media (max-width:640px){.home{padding-top:56px;gap:96px}}
+.ab-hero .hero-t>.h3+.h1{margin-top:-16px}
+/* About: comment-style labels at the same size as the homepage section labels */
+.home .h3,.home .tk-title{font-size:26px;line-height:36px;letter-spacing:-.132px}
+@media (max-width:1023px){.home .h3,.home .tk-title{font-size:24px;line-height:34px}}
+@media (max-width:640px){.home .h3,.home .tk-title{font-size:22px;line-height:32px}}
+/* timeline intro uses the full width when there is room */
+.tl-head .blk{max-width:none;flex:1 1 0;min-width:min(100%,20em)}
+/* no divider lines on header and footer (2026-11-21) */
+.hd{border-bottom:0}
+.ft-in{border-top:0}
 </style>
 <!-- Icons (inline) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -797,7 +821,7 @@ html[lang="en"] .mnav-ul a{font-family:var(--f-ui)}
 <header class="hd">
   <div class="hd-in">
     <a class="who" href="../" data-int><img class="av" src="assets/memoji.gif" alt=""><b>Liya Lin</b><span class="tag">產品設計師</span></a>
-    <nav class="nav ab" aria-label="網站導覽"><a href="../#work" data-int>作品</a><a href="#top" aria-current="page">關於</a></nav>
+    <nav class="nav ab" aria-label="網站導覽"><a href="../" data-int>作品</a><a href="#top" aria-current="page">關於</a></nav>
     <div class="ctl">
       <button type="button" class="ib lang" id="lang" aria-label="Switch to English" title="Switch to English">EN</button>
       <a class="ib" href="mailto:a2200452@gmail.com" aria-label="寄信給我" title="寄信給我"><svg><use href="#i-mail"/></svg></a>
@@ -809,7 +833,7 @@ html[lang="en"] .mnav-ul a{font-family:var(--f-ui)}
 <div class="mnav-bd" id="mnavbd" hidden></div>
 <nav class="mnav" id="mnav" aria-label="網站選單" hidden>
   <div class="mnav-top"><span class="mnav-lbl">Liya 的作品集</span><button type="button" class="mnav-x" id="mnavx" aria-label="關閉選單"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
-  <ul class="mnav-ul"><li><a href="../" data-int><span>首頁</span></a></li><li><a href="../#work" data-int><span>作品</span></a></li><li><a href="../about/" data-int aria-current="page"><span>關於</span><i></i></a></li><li><a data-cv href="https://drive.google.com/uc?export=download&amp;id=1rgkWRyPfUmzQSgk58LcbnQCT2NMmKU6T" target="_blank" rel="noopener"><span>履歷</span></a></li></ul>
+  <ul class="mnav-ul"><li><a href="../" data-int><span>首頁</span></a></li><li><a href="../" data-int><span>作品</span></a></li><li><a href="../about/" data-int aria-current="page"><span>關於</span><i></i></a></li><li><a data-cv href="https://drive.google.com/uc?export=download&amp;id=1rgkWRyPfUmzQSgk58LcbnQCT2NMmKU6T" target="_blank" rel="noopener"><span>履歷</span></a></li></ul>
   <hr class="mnav-hr">
   <div class="mnav-soc"><a class="ib" href="https://www.linkedin.com/in/liya-lin-a4681624b/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg><use href="#i-in"/></svg></a><a class="ib" href="https://www.instagram.com/lucky_cat_lifestyle/" target="_blank" rel="noopener" aria-label="Instagram"><svg><use href="#i-ig"/></svg></a><a class="ib" href="https://www.behance.net/a2200452eded" target="_blank" rel="noopener" aria-label="Behance"><svg><use href="#i-be"/></svg></a></div>
   <a class="mnav-mail" href="mailto:a2200452@gmail.com">寄信給我</a>
@@ -914,15 +938,39 @@ html[lang="en"] .mnav-ul a{font-family:var(--f-ui)}
 </footer>
 
 <script>
-/* open at the top unless a section is linked */
+/* open at the top unless a section is linked. Works whether the page scrolls the window or a wrapper the viewer puts around it
+   (the Claude app viewer keeps its scroll offset between artifacts). Stops as soon as the visitor scrolls, taps or types. */
 (function(){try{if('scrollRestoration' in history)history.scrollRestoration='manual'}catch(e){}
-  function top(){
-    if(!location.hash){window.scrollTo(0,0);return}
-    var id=decodeURIComponent(location.hash.slice(1)).replace(/^en-?/,'');if(!id){window.scrollTo(0,0);return}
-    var el=null;try{el=document.getElementById(id)}catch(e){}
-    if(el){var y=el.getBoundingClientRect().top+window.scrollY-88;window.scrollTo({top:Math.max(0,y),behavior:'instant'})}
+  var user=false,t0=Date.now(),busy=false,mark=null;
+  ['wheel','touchstart','pointerdown','keydown'].forEach(function(t){addEventListener(t,function(){user=true},{passive:true,capture:true})});
+  function target(){
+    var id=decodeURIComponent((location.hash||'').slice(1)).replace(/^en-?/,'');if(!id)return null;
+    try{return document.getElementById(id)}catch(e){return null}
   }
-  if(!location.hash)top();document.addEventListener('DOMContentLoaded',top);window.addEventListener('load',top);window.addEventListener('pageshow',function(e){if(e.persisted)top()});})();
+  function topMark(){
+    if(mark&&mark.isConnected)return mark;
+    if(!document.body)return null;
+    mark=document.createElement('span');mark.setAttribute('aria-hidden','true');
+    mark.style.cssText='position:absolute;top:0;left:0;width:1px;height:1px;pointer-events:none';
+    document.body.insertBefore(mark,document.body.firstChild);return mark;
+  }
+  function scrollers(){ /* every scrolled ancestor of the page, plus the window */
+    var list=[],n=document.body;
+    while(n){if(n.scrollTop>0)list.push(n);n=n.parentElement}
+    return list;
+  }
+  function place(){
+    if(user)return;
+    var el=target();
+    if(el){el.scrollIntoView({block:'start',behavior:'instant'});return}
+    window.scrollTo(0,0);scrollers().forEach(function(s){s.scrollTop=0});
+    var m=topMark();if(m)m.scrollIntoView({block:'start',behavior:'instant'});
+  }
+  place();document.addEventListener('DOMContentLoaded',place);window.addEventListener('load',place);
+  window.addEventListener('pageshow',function(e){if(e.persisted){user=false;t0=Date.now();place()}});
+  /* undo any scroll the visitor did not make during the first moments (scroll events from any container, caught on the way down) */
+  document.addEventListener('scroll',function(){if(user||busy||Date.now()-t0>2500)return;busy=true;requestAnimationFrame(function(){busy=false;place()})},{passive:true,capture:true});
+})();
 </script>
 <script>
 (function(){
@@ -969,11 +1017,15 @@ html[lang="en"] .mnav-ul a{font-family:var(--f-ui)}
     var tw=rot.querySelector('.tw'),G='/!<>-_\\[]{}=+*^?#',wi=0,t=0,raf=0,vis=false,busy=false,D=800,HOLD=1500;
     function words(){return rot.dataset.words.split('|').map(function(w){return w.trim()})}
     var ws=words();
+    var m=document.createElement('span');m.className='tw-m';m.setAttribute('aria-hidden','true');rot.appendChild(m);
+    function fit(w){m.textContent=w;rot.style.width=Math.ceil(m.getBoundingClientRect().width)+'px'}
+    fit(tw.textContent||ws[0]);addEventListener('resize',function(){fit(busy?ws[wi]:tw.textContent)});
+    if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){fit(busy?ws[wi]:tw.textContent)});
     if(reduce)return;
     function rnd(n){var s='';for(var i=0;i<n;i++)s+=G[Math.floor(Math.random()*G.length)];return s}
     function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
     function scramble(from,to,done){
-      var t0=0;busy=true;
+      var t0=0;busy=true;fit(to);
       (function f(now){
         if(!t0)t0=now;var p=Math.min(1,(now-t0)/D),e=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
         var n=Math.floor(e*to.length),len=Math.round(from.length+(to.length-from.length)*e),rest=Math.max(0,len-n);
@@ -985,7 +1037,7 @@ html[lang="en"] .mnav-ul a{font-family:var(--f-ui)}
     function run(){if(busy)return;clearTimeout(t);if(vis&&!document.hidden)t=setTimeout(next,HOLD)}
     if('IntersectionObserver' in window)new IntersectionObserver(function(es){vis=es[0].isIntersecting;run()},{threshold:.35}).observe(cta);
     document.addEventListener('visibilitychange',run);
-    document.addEventListener('langchange',function(){ws=words();wi=0;tw.textContent=ws[0]});
+    document.addEventListener('langchange',function(){ws=words();wi=0;tw.textContent=ws[0];fit(ws[0])});
   })();
 })();
 </script>

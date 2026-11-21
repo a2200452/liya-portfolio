@@ -1,4 +1,5 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.pjf-hero{border-radius:6px;overflow:hidden;border:1px solid var(--line-soft)}
+</style></head><body>
 <link rel="icon" type="image/png" href="assets/memoji-icon.png">
 <link rel="apple-touch-icon" href="assets/memoji-icon.png">
 <title>Subway App 案例</title>
@@ -613,6 +614,17 @@ html[lang="en"] .mnav-ul a{font-family:var(--f-ui)}
 /* Memoji: no background, no ring */
 .av{border-radius:0;background:transparent;box-shadow:none;object-fit:contain;mix-blend-mode:multiply}
 .ft-in{grid-template-columns:minmax(0,1fr)}
+.pjf-hero{border-radius:4px;overflow:hidden}
+.pjm{position:relative;aspect-ratio:1224/684;overflow:hidden;container-type:inline-size;background:radial-gradient(120% 90% at 100% 0%,#E2FBD3 0%,rgba(226,251,211,0) 62%),radial-gradient(70% 60% at 85% 100%,#F1F5F1 0%,rgba(241,245,241,0) 70%),linear-gradient(160deg,#F3FDEB 0%,#F7FEF2 50%,#F5FBF3 100%);display:flex;align-items:center}
+.pjm-t{display:flex;width:max-content;animation:pjmq 42s linear infinite}
+.pjm-s{display:flex;align-items:center;gap:6cqw;padding-right:6cqw}
+.pjm img{height:48.8cqw;width:auto;max-width:none;display:block;position:relative;top:-.28cqw}
+.pjm-s img:nth-child(2){height:47.6cqw}
+@keyframes pjmq{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.pjm-t{animation:none}}
+/* no divider lines on header and footer (2026-11-21) */
+.hd{border-bottom:0}
+.ft-in{border-top:0}
 </style>
 
 <!-- Icons (inline) -->
@@ -638,7 +650,7 @@ html[lang="en"] .mnav-ul a{font-family:var(--f-ui)}
 <header class="hd">
   <div class="hd-in">
     <a class="who" href="../" data-int aria-label="回到作品集主頁"><img class="av" src="assets/memoji.gif" alt=""><b>Liya Lin</b><span class="tag">產品設計師</span></a>
-    <nav class="nav" aria-label="網站導覽"><a href="../#work" data-int>作品</a><a href="../about/" data-int>關於</a></nav>
+    <nav class="nav" aria-label="網站導覽"><a href="../" data-int>作品</a><a href="../about/" data-int>關於</a></nav>
     <div class="ctl">
       <button type="button" class="ib lang" id="lang" aria-label="Switch to English" title="Switch to English">EN</button>
       <a class="ib" href="mailto:a2200452@gmail.com" aria-label="寄信給我" title="寄信給我"><svg><use href="#i-mail"/></svg></a>
@@ -650,7 +662,7 @@ html[lang="en"] .mnav-ul a{font-family:var(--f-ui)}
 <div class="mnav-bd" id="mnavbd" hidden></div>
 <nav class="mnav" id="mnav" aria-label="網站選單" hidden>
   <div class="mnav-top"><span class="mnav-lbl">Liya 的作品集</span><button type="button" class="mnav-x" id="mnavx" aria-label="關閉選單"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
-  <ul class="mnav-ul"><li><a href="../" data-int><span>首頁</span></a></li><li><a href="../#work" data-int aria-current="page"><span>作品</span><i></i></a></li><li><a href="../about/" data-int><span>關於</span></a></li><li><a data-cv href="https://drive.google.com/uc?export=download&amp;id=1rgkWRyPfUmzQSgk58LcbnQCT2NMmKU6T" target="_blank" rel="noopener"><span>履歷</span></a></li></ul>
+  <ul class="mnav-ul"><li><a href="../" data-int><span>首頁</span></a></li><li><a href="../" data-int aria-current="page"><span>作品</span><i></i></a></li><li><a href="../about/" data-int><span>關於</span></a></li><li><a data-cv href="https://drive.google.com/uc?export=download&amp;id=1rgkWRyPfUmzQSgk58LcbnQCT2NMmKU6T" target="_blank" rel="noopener"><span>履歷</span></a></li></ul>
   <hr class="mnav-hr">
   <div class="mnav-soc"><a class="ib" href="https://www.linkedin.com/in/liya-lin-a4681624b/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg><use href="#i-in"/></svg></a><a class="ib" href="https://www.instagram.com/lucky_cat_lifestyle/" target="_blank" rel="noopener" aria-label="Instagram"><svg><use href="#i-ig"/></svg></a><a class="ib" href="https://www.behance.net/a2200452eded" target="_blank" rel="noopener" aria-label="Behance"><svg><use href="#i-be"/></svg></a></div>
   <a class="mnav-mail" href="mailto:a2200452@gmail.com">寄信給我</a>
@@ -663,7 +675,7 @@ html[lang="en"] .mnav-ul a{font-family:var(--f-ui)}
     <!-- Overview -->
     <section id="overview" class="sec" style="gap:32px">
       <h1 class="h1">透過客製化熱量平衡與狀態即時化，重塑現代外食族無負擔的點餐體驗</h1>
-      <div class="ph dk" style="aspect-ratio:1224/684"><span>Subway App 案例封面<br>assets/01-cover.png</span><img src="assets/01-cover.png" alt="Subway App 案例封面" onerror="this.remove()"></div>
+      <div class="pjf-hero"><div class="pjm" aria-hidden="true"><div class="pjm-t"><div class="pjm-s"><img src="assets/thumb-14.png" alt="" style="aspect-ratio:1581/738"><img src="assets/thumb-15.png" alt="" style="aspect-ratio:1581/963"></div><div class="pjm-s"><img src="assets/thumb-14.png" alt="" style="aspect-ratio:1581/738"><img src="assets/thumb-15.png" alt="" style="aspect-ratio:1581/963"></div></div></div></div>
       <div>
         <div class="meta">
           <div class="ci"><span class="tag" style="align-self:flex-start">角色</span><div class="v ui">UX/UI 設計師</div><div class="s">獨立主導端到端設計</div></div>
@@ -1074,15 +1086,39 @@ html[lang="en"] .mnav-ul a{font-family:var(--f-ui)}
 </footer>
 
 <script>
-/* open at the top unless a section is linked */
+/* open at the top unless a section is linked. Works whether the page scrolls the window or a wrapper the viewer puts around it
+   (the Claude app viewer keeps its scroll offset between artifacts). Stops as soon as the visitor scrolls, taps or types. */
 (function(){try{if('scrollRestoration' in history)history.scrollRestoration='manual'}catch(e){}
-  function top(){
-    if(!location.hash){window.scrollTo(0,0);return}
-    var id=decodeURIComponent(location.hash.slice(1)).replace(/^en-?/,'');if(!id){window.scrollTo(0,0);return}
-    var el=null;try{el=document.getElementById(id)}catch(e){}
-    if(el){var y=el.getBoundingClientRect().top+window.scrollY-88;window.scrollTo({top:Math.max(0,y),behavior:'instant'})}
+  var user=false,t0=Date.now(),busy=false,mark=null;
+  ['wheel','touchstart','pointerdown','keydown'].forEach(function(t){addEventListener(t,function(){user=true},{passive:true,capture:true})});
+  function target(){
+    var id=decodeURIComponent((location.hash||'').slice(1)).replace(/^en-?/,'');if(!id)return null;
+    try{return document.getElementById(id)}catch(e){return null}
   }
-  if(!location.hash)top();document.addEventListener('DOMContentLoaded',top);window.addEventListener('load',top);window.addEventListener('pageshow',function(e){if(e.persisted)top()});})();
+  function topMark(){
+    if(mark&&mark.isConnected)return mark;
+    if(!document.body)return null;
+    mark=document.createElement('span');mark.setAttribute('aria-hidden','true');
+    mark.style.cssText='position:absolute;top:0;left:0;width:1px;height:1px;pointer-events:none';
+    document.body.insertBefore(mark,document.body.firstChild);return mark;
+  }
+  function scrollers(){ /* every scrolled ancestor of the page, plus the window */
+    var list=[],n=document.body;
+    while(n){if(n.scrollTop>0)list.push(n);n=n.parentElement}
+    return list;
+  }
+  function place(){
+    if(user)return;
+    var el=target();
+    if(el){el.scrollIntoView({block:'start',behavior:'instant'});return}
+    window.scrollTo(0,0);scrollers().forEach(function(s){s.scrollTop=0});
+    var m=topMark();if(m)m.scrollIntoView({block:'start',behavior:'instant'});
+  }
+  place();document.addEventListener('DOMContentLoaded',place);window.addEventListener('load',place);
+  window.addEventListener('pageshow',function(e){if(e.persisted){user=false;t0=Date.now();place()}});
+  /* undo any scroll the visitor did not make during the first moments (scroll events from any container, caught on the way down) */
+  document.addEventListener('scroll',function(){if(user||busy||Date.now()-t0>2500)return;busy=true;requestAnimationFrame(function(){busy=false;place()})},{passive:true,capture:true});
+})();
 </script>
 <script>
 (function(){

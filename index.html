@@ -596,10 +596,12 @@ a.who{color:inherit}
 .pv img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .pv .cap{position:absolute;left:0;right:0;bottom:0;padding:28px 14px 12px;background:linear-gradient(to top,rgba(18,19,22,.62),rgba(18,19,22,0));color:#fff;display:flex;flex-direction:column;gap:2px;text-align:left}
 .pv .cap b{font:600 17px/22px var(--f-ui)}.pv .cap small{font:500 12px/16px var(--f-mono);opacity:.85}
-.cur>div{display:inline-flex;align-items:center;gap:8px;padding:9px 12px 9px 14px;border-radius:8px;background:#121316;color:#fff;font:500 14px/20px var(--f-ui);white-space:nowrap;opacity:0;transform:scale(.85);transform-origin:0 0;transition:opacity .15s,transform .2s cubic-bezier(.2,.7,.2,1)}
+.cur>div{display:inline-flex;align-items:center;gap:4px;height:26px;padding:3px 6px 3px 8px;box-sizing:border-box;border-radius:4px;background:#121316;color:#fff;font:500 14px/20px var(--f-mono);white-space:nowrap;opacity:0;transform:scale(.85);transform-origin:0 0;transition:opacity .15s,transform .2s cubic-bezier(.2,.7,.2,1)}
 .cur.on>div{opacity:1;transform:none}
-.cur svg{width:14px;height:14px;color:#86EFAC}
+.cur svg{width:12px;height:12px;color:#86EFAC}
 @media (prefers-reduced-motion:reduce){.pv>div,.cur>div{transition:opacity .1s}}
+
+
 
 /* ===== 上篇 thumbnail: mascot story (worry → magnifier → prototype). Stage is 100cqw × 55.9cqw ===== */
 .pjx{position:relative;aspect-ratio:1224/684;overflow:hidden;container-type:inline-size;background:#FFF3CF;transition:background-color .6s}
@@ -711,11 +713,11 @@ a.who{color:inherit}
 .pj-tx .t{font:700 26px/34px var(--f-tc);letter-spacing:-.3px;color:var(--ink)}
 .pj-tx .p{font:400 16px/26px var(--f-ui);color:var(--body)}
 @media (max-width:820px){.pj-body{grid-template-columns:minmax(0,1fr)}.pj-tx .t{font-size:22px;line-height:30px}}
-.pjm{position:relative;aspect-ratio:1224/684;overflow:hidden;container-type:inline-size;background:#fff;display:flex;align-items:center}
+.pjm{position:relative;aspect-ratio:1224/684;overflow:hidden;container-type:inline-size;background:radial-gradient(120% 90% at 100% 0%,#E2FBD3 0%,rgba(226,251,211,0) 62%),radial-gradient(70% 60% at 85% 100%,#F1F5F1 0%,rgba(241,245,241,0) 70%),linear-gradient(160deg,#F3FDEB 0%,#F7FEF2 50%,#F5FBF3 100%);display:flex;align-items:center}
 .pjm-t{display:flex;width:max-content;animation:pjmq 42s linear infinite}
 .pjm-s{display:flex;align-items:center;gap:6cqw;padding-right:6cqw}
-.pjm img{height:42cqw;width:auto;max-width:none;display:block}
-.pjm-s img:nth-child(2){height:40cqw}
+.pjm img{height:48.8cqw;width:auto;max-width:none;display:block;position:relative;top:-.28cqw}
+.pjm-s img:nth-child(2){height:47.6cqw}
 @keyframes pjmq{to{transform:translateX(-50%)}}
 .pj:hover .pjm-t{animation-play-state:running}
 @media (prefers-reduced-motion:reduce){.pjm-t{animation:none}}
@@ -894,8 +896,12 @@ html[lang="en"] .mnav-ul a{font-family:var(--f-ui)}
 
 /* 下篇 thumbnail: second-iteration recording, full phone, no scaling on hover */
 .pj-cover img,.pj-cover:hover img{transform:none!important;transition:none!important}
-.pjvid{position:relative;aspect-ratio:1224/684;overflow:hidden;background:#F8F8F8;display:flex;align-items:center;justify-content:center}
-.pjvid video{height:112%;width:auto;aspect-ratio:720/726;flex:none;display:block;clip-path:inset(5.6% 0 6.2% 0);background:#F8F8F8}
+.pjvid{position:relative;aspect-ratio:1224/684;overflow:hidden;background:radial-gradient(120% 90% at 100% 0%,#E2FBD3 0%,rgba(226,251,211,0) 62%),radial-gradient(70% 60% at 85% 100%,#F1F5F1 0%,rgba(241,245,241,0) 70%),linear-gradient(160deg,#F3FDEB 0%,#F7FEF2 50%,#F5FBF3 100%);display:flex;align-items:center;justify-content:center}
+.pjvid .pjvp{position:relative;height:96.6%;aspect-ratio:720/726;flex:none}
+.pjvid .pjvp-c{position:absolute;left:28.33%;top:6.4%;right:28.68%;bottom:6.68%;overflow:hidden;border-radius:16.2%/7.9%;-webkit-mask-image:-webkit-radial-gradient(#fff,#000);transform:translateZ(0)}
+.pjvid video{position:absolute;left:-65.9%;top:-7.37%;width:232.6%;height:115.06%;max-width:none;display:block;object-fit:fill}
+.pjvid .pjvp-c canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.pjvid .pjvp-c.cv-on video{opacity:0}
 
 /* dark buttons: background stays, text + icon turn pure white, icon moves */
 .btn:not(.ghost):hover,.btn:not(.ghost):active,.mnav-mail:hover,.mnav-mail:active{background:var(--ink-btn);color:#fff;transform:none}
@@ -929,6 +935,41 @@ html[lang="en"] .mnav-ul a{font-family:var(--f-ui)}
 /* hero buttons repeat the header; show them only when the header is collapsed */
 @media (min-width:821px){.hero-a{display:none}}
 .ft-in{grid-template-columns:minmax(0,1fr)}
+/* ===== breathing room (2026-11-21): section rhythm modelled on astapable.com; inside a section follow the case-page rhythm 16 / 12 / 16 ===== */
+.home .sec{gap:16px}
+.home .sec>.blk{gap:12px}
+.home{padding-top:120px;padding-bottom:64px;gap:160px}
+.hero-t{gap:32px}
+.pjs{gap:32px}
+.grid.vg{gap:6px}
+.vc{padding:36px;gap:16px}
+.cta{padding:160px 0 120px}
+@media (min-width:641px) and (max-width:1023px){.home{padding-top:96px;gap:128px}.cta{padding:128px 0 96px}}
+@media (max-width:820px){.cta{padding:96px 0 64px}}
+@media (max-width:760px){.pjs{gap:56px}.vc{padding:24px}}
+.hero .h1,.hero .lead{max-width:none}
+@media (max-width:640px){.home{padding-top:56px;gap:96px}}
+/* homepage hero: centred, one line per clause (break at punctuation), two lines each */
+#about.hero{justify-items:center;text-align:center}
+#about .hero-t{align-items:center}
+#about .ln{display:block}
+#about .hero-t{width:100%;container-type:inline-size}
+#about .h1,#about .lead{max-width:none}
+/* Chinese: each clause on its own line; size follows the real content width so both lines always fit */
+html:not([lang=en]) #about .h1{font-size:min(52px,calc(100cqi / 13.4));line-height:1.25}
+html:not([lang=en]) #about .lead{font-size:clamp(13px,calc(100cqi / 21.5),17px)}
+/* English: one continuous sentence, balanced lines for easy reading */
+html[lang=en] #about .ln{display:inline}
+html[lang=en] #about .h1{font-size:clamp(30px,6.4cqi,52px);line-height:1.18;max-width:19em;text-wrap:balance}
+html[lang=en] #about .lead{max-width:34em;text-wrap:balance}
+#about .hero-a{justify-content:center}
+/* homepage section headers: centred, comment-style label at section-title size */
+.home .sec>.h3{text-align:center;font-size:26px;line-height:36px}
+@media (max-width:1023px){.home .sec>.h3{font-size:24px;line-height:34px}}
+@media (max-width:640px){.home .sec>.h3{font-size:22px;line-height:32px}}
+/* no divider lines on header and footer (2026-11-21) */
+.hd{border-bottom:0}
+.ft-in{border-top:0}
 </style>
 <!-- Icons (inline) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -981,8 +1022,8 @@ html[lang="en"] .mnav-ul a{font-family:var(--f-ui)}
   <!-- Hero -->
   <section id="about" class="hero">
     <div class="hero-t">
-      <h1 class="h1">為了相信而去質疑，設計讓生活更舒適友善的產品</h1>
-      <p class="lead">我是一名 UX/UI 設計師，也是 <a class="lnk" href="https://www.instagram.com/lucky_cat_lifestyle/" target="_blank" rel="noopener">IG 創作者</a>與 <a class="lnk" href="https://open.firstory.me/user/belowgroundlevel" target="_blank" rel="noopener">Podcaster</a>。從使用者研究出發，把觀察到的問題轉成可驗證的設計，再用測試數據確認它真的有幫助。</p>
+      <h1 class="h1"><span class="ln">為了相信而去質疑，</span><span class="ln">設計讓生活更舒適友善的產品</span></h1>
+      <p class="lead"><span class="ln">UX/UI 設計師，也是 <a class="lnk" href="https://www.instagram.com/lucky_cat_lifestyle/" target="_blank" rel="noopener">IG 創作者</a>與 <a class="lnk" href="https://open.firstory.me/user/belowgroundlevel" target="_blank" rel="noopener">Podcaster</a>。</span><span class="ln">從研究找出問題、用設計解決，再用數據驗證。</span></p>
       <div class="hero-a">
         <a class="btn ghost" href="about/" data-int>了解 Liya<svg class="dl"><use href="#i-arr"/></svg></a>
         <a class="btn ghost" data-cv href="https://drive.google.com/uc?export=download&amp;id=1rgkWRyPfUmzQSgk58LcbnQCT2NMmKU6T" target="_blank" rel="noopener"><svg class="dl"><use href="#i-dl"/></svg>下載履歷</a>
@@ -992,21 +1033,20 @@ html[lang="en"] .mnav-ul a{font-family:var(--f-ui)}
 
   <!-- UX/UI project -->
   <section id="work" class="sec">
-    <h3 class="h3">/* UX/UI 專案 */</h3>
-    <div class="blk"><h2 class="h2">Subway 線上點餐系統</h2><p class="p">幫助使用者找到想要的餐點搭配並完成點餐的 iOS 點餐系統。案例分為上下兩篇：先研究與設計，再用兩輪易用性測試驗證並迭代。</p></div>
+    <h3 class="h3">/* 專案 */</h3>
     <div class="pjs">
     <article class="card pj">
       <a class="pj-cover" data-cursor="查看研究＆設計：探索到原型" href="subway-research/" data-int aria-label="查看 Subway 案例上篇：研究＆設計"><div class="pjm" aria-hidden="true"><div class="pjm-t"><div class="pjm-s"><img src="assets/14-wireframe-custom-menu.png" alt="" style="aspect-ratio:1581/738"><img src="assets/15-wireframe-store-orders.png" alt="" style="aspect-ratio:1581/963"></div><div class="pjm-s"><img src="assets/14-wireframe-custom-menu.png" alt="" style="aspect-ratio:1581/738"><img src="assets/15-wireframe-store-orders.png" alt="" style="aspect-ratio:1581/963"></div></div></div></a>
       <a class="pj-body" href="subway-research/" data-int data-cursor="查看研究＆設計：探索到原型">
-        <div class="pj-tags"><span class="chip">使用者研究</span><span class="chip">人物誌</span><span class="chip">原型設計</span></div>
+        <div class="pj-tags"><span class="chip">使用者研究</span><span class="chip">線框圖</span><span class="chip">UI 設計</span></div>
         <div class="pj-tx"><span class="t">Subway App・研究與設計</span><span class="p">從 80 份問卷與 5 位用戶訪談，找出外食族點餐時的痛點，設計出四大核心功能。</span></div>
       </a>
     </article>
     <article class="card pj">
       <a class="pj-cover" data-cursor="查看易用性測試：兩輪迭代結果" href="subway-usability/" data-int aria-label="查看 Subway 案例下篇：易用性測試">
-        <div class="pjvid" aria-hidden="true"><video muted loop playsinline preload="metadata" src="assets/19-video-test-2.mp4#t=0.1"></video></div></a>
+        <div class="pjvid" aria-hidden="true"><div class="pjvp"><div class="pjvp-c"><video muted loop playsinline preload="metadata" src="assets/19-video-test-2.mp4#t=0.1"></video></div></div></div></a>
       <a class="pj-body" href="subway-usability/" data-int data-cursor="查看易用性測試：兩輪迭代結果">
-        <div class="pj-tags"><span class="chip">易用性測試</span><span class="chip">SUS</span><span class="chip">迭代設計</span></div>
+        <div class="pj-tags"><span class="chip">易用性測試</span><span class="chip">原型設計</span><span class="chip">行動裝置設計</span></div>
         <div class="pj-tx"><span class="t">Subway App・易用性測試</span><span class="p">兩輪 Maze 遠距測試，依用戶回饋迭代介面，可用性評分（SUS）從 55 提升至 75。</span></div>
       </a>
     </article>
@@ -1016,12 +1056,11 @@ html[lang="en"] .mnav-ul a{font-family:var(--f-ui)}
   <!-- Value -->
   <section id="skills" class="sec">
     <h3 class="h3">/* 我能帶來的價值 */</h3>
-    <div class="blk"><h2 class="h2">從釐清問題、設計，到做出能上線的成品</h2><p class="p">適合 UI/UX 設計師、Design Builder 與產品經理（PM）相關職位。如果你在找能一路從研究走到可互動原型的夥伴，這是我能帶來的：</p></div>
     <div class="grid vg">
-      <article class="card vc"><span class="chip dk">UI/UX Design</span><h3 class="vt">把複雜的流程，變成一看就會用的介面</h3><p class="p">從研究找出真正的卡點，再用測試數據證明設計有效。</p><ul class="vp-l"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Subway 點餐 App：可用性評分 SUS 55 → 75</span></li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>建置 Figma 元件庫與 Design Guideline，涵蓋 Desktop、iOS、Android</span></li></ul></article>
-      <article class="card vc"><span class="chip dk">Design Builder</span><h3 class="vt">不只畫設計稿，直接做出能動的成品</h3><p class="p">用 Claude、Gemini 等 AI 工具，把設計快速做成可以點、可以測的原型和網頁，討論不再停在靜態稿。</p><ul class="vp-l"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>這個作品集的互動、動畫與中英切換，由我和 AI 協作完成</span></li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Figma 互動原型與 Webflow 網站上線經驗</span></li></ul></article>
-      <article class="card vc"><span class="chip dk">Product Thinking</span><h3 class="vt">先想清楚做什麼，再決定怎麼做</h3><p class="p">用使用者影響與商業價值排序需求，和 PM、工程一起對齊範圍與優先順序。</p><ul class="vp-l"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>以四象限圖與峰終定律收斂功能，選出最有效益的方向</span></li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>優化設計交付流程，降低與工程團隊的溝通成本</span></li></ul></article>
-      <article class="card vc"><span class="chip dk">Communication</span><h3 class="vt">把專業的事，說成大家都懂的話</h3><p class="p">每週經營 IG「人生招財貓」，用插畫把理財知識畫成好懂的小故事；同樣的能力用在對齊團隊與說服利害關係人。</p><ul class="vp-l"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>建築系出身，習慣從實地觀察與使用情境出發</span></li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>曾共同主持 Podcast @地下事，分享產業觀察</span></li></ul></article>
+      <article class="card vc"><span class="chip dk">UI/UX Design</span><h3 class="vt">讓複雜流程變得一看就懂</h3><p class="p">用建築系養成的觀察習慣找出卡點，再用測試數據證明設計有效。</p><ul class="vp-l"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Subway 點餐 App 可用性評分 SUS 55 → 75</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>建立三端共用的 Figma 元件庫與設計指南</li></ul></article>
+      <article class="card vc"><span class="chip dk">Design Builder</span><h3 class="vt">設計稿之外，直接做出能用的成品</h3><p class="p">用 Claude、Gemini 把設計做成可點、可測的原型與網頁，讓討論更快落地。</p><ul class="vp-l"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>重製公司官網，客戶詢問表單填寫率提升 30%</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>這個作品集從設計到上線，由我與 AI 完成</li></ul></article>
+      <article class="card vc"><span class="chip dk">Product Thinking</span><h3 class="vt">先想清楚做什麼，再決定怎麼做</h3><p class="p">依使用者影響與商業價值排序需求；曾以唯一設計師身分推動 3 個產品。</p><ul class="vp-l"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>用四象限圖與峰終定律收斂功能</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>優化交付流程，減少與工程來回溝通</li></ul></article>
+      <article class="card vc"><span class="chip dk">Communication</span><h3 class="vt">把專業說成大家都懂的話</h3><p class="p">經營 IG「人生招財貓」用插畫講理財，同樣的能力用來對齊團隊。</p><ul class="vp-l"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>共同主持 Podcast @地下事</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>把研究整理成人物誌與旅程圖，讓團隊快速對齊</li></ul></article>
     </div>
   </section>
 
@@ -1046,15 +1085,39 @@ html[lang="en"] .mnav-ul a{font-family:var(--f-ui)}
 </footer>
 
 <script>
-/* open at the top unless a section is linked */
+/* open at the top unless a section is linked. Works whether the page scrolls the window or a wrapper the viewer puts around it
+   (the Claude app viewer keeps its scroll offset between artifacts). Stops as soon as the visitor scrolls, taps or types. */
 (function(){try{if('scrollRestoration' in history)history.scrollRestoration='manual'}catch(e){}
-  function top(){
-    if(!location.hash){window.scrollTo(0,0);return}
-    var id=decodeURIComponent(location.hash.slice(1)).replace(/^en-?/,'');if(!id){window.scrollTo(0,0);return}
-    var el=null;try{el=document.getElementById(id)}catch(e){}
-    if(el){var y=el.getBoundingClientRect().top+window.scrollY-88;window.scrollTo({top:Math.max(0,y),behavior:'instant'})}
+  var user=false,t0=Date.now(),busy=false,mark=null;
+  ['wheel','touchstart','pointerdown','keydown'].forEach(function(t){addEventListener(t,function(){user=true},{passive:true,capture:true})});
+  function target(){
+    var id=decodeURIComponent((location.hash||'').slice(1)).replace(/^en-?/,'');if(!id)return null;
+    try{return document.getElementById(id)}catch(e){return null}
   }
-  if(!location.hash)top();document.addEventListener('DOMContentLoaded',top);window.addEventListener('load',top);window.addEventListener('pageshow',function(e){if(e.persisted)top()});})();
+  function topMark(){
+    if(mark&&mark.isConnected)return mark;
+    if(!document.body)return null;
+    mark=document.createElement('span');mark.setAttribute('aria-hidden','true');
+    mark.style.cssText='position:absolute;top:0;left:0;width:1px;height:1px;pointer-events:none';
+    document.body.insertBefore(mark,document.body.firstChild);return mark;
+  }
+  function scrollers(){ /* every scrolled ancestor of the page, plus the window */
+    var list=[],n=document.body;
+    while(n){if(n.scrollTop>0)list.push(n);n=n.parentElement}
+    return list;
+  }
+  function place(){
+    if(user)return;
+    var el=target();
+    if(el){el.scrollIntoView({block:'start',behavior:'instant'});return}
+    window.scrollTo(0,0);scrollers().forEach(function(s){s.scrollTop=0});
+    var m=topMark();if(m)m.scrollIntoView({block:'start',behavior:'instant'});
+  }
+  place();document.addEventListener('DOMContentLoaded',place);window.addEventListener('load',place);
+  window.addEventListener('pageshow',function(e){if(e.persisted){user=false;t0=Date.now();place()}});
+  /* undo any scroll the visitor did not make during the first moments (scroll events from any container, caught on the way down) */
+  document.addEventListener('scroll',function(){if(user||busy||Date.now()-t0>2500)return;busy=true;requestAnimationFrame(function(){busy=false;place()})},{passive:true,capture:true});
+})();
 </script>
 <script>
 (function(){
@@ -1097,9 +1160,9 @@ html[lang="en"] .mnav-ul a{font-family:var(--f-ui)}
   document.body.appendChild(pv);document.body.appendChild(cur);
   var mx=0,my=0,px=0,py=0,cx=0,cy=0,raf=0,mode=null,first=true;
   function place(){
-    raf=0;var k=reduce||first?1:.22;first=false;
+    raf=0;var k=reduce||first?1:.4;first=false;
     if(mode==='pv'){var w=240,tx=mx+24,ty=my-w/2;if(tx+w>innerWidth-12)tx=mx-24-w;ty=Math.max(12,Math.min(innerHeight-w-12,ty));px+=(tx-px)*k;py+=(ty-py)*k;pv.style.transform='translate3d('+px+'px,'+py+'px,0)';if(Math.abs(tx-px)+Math.abs(ty-py)>.5)raf=requestAnimationFrame(place)}
-    if(mode==='cur'){var tx2=mx+16,ty2=my+20,cw=cur.firstChild.offsetWidth;if(tx2+cw>innerWidth-12)tx2=mx-16-cw;cx+=(tx2-cx)*k;cy+=(ty2-cy)*k;cur.style.transform='translate3d('+cx+'px,'+cy+'px,0)';if(Math.abs(tx2-cx)+Math.abs(ty2-cy)>.5)raf=requestAnimationFrame(place)}
+    if(mode==='cur'){var tx2=mx+10,ty2=my+24,cw=cur.firstChild.offsetWidth;if(tx2+cw>innerWidth-12)tx2=mx-16-cw;cx+=(tx2-cx)*k;cy+=(ty2-cy)*k;cur.style.transform='translate3d('+cx+'px,'+cy+'px,0)';if(Math.abs(tx2-cx)+Math.abs(ty2-cy)>.5)raf=requestAnimationFrame(place)}
   }
   function go(){if(!raf)raf=requestAnimationFrame(place)}
   document.addEventListener('pointermove',function(e){if(e.pointerType!=='mouse'||!fine.matches)return;mx=e.clientX;my=e.clientY;go()},{passive:true});
@@ -1159,6 +1222,23 @@ html[lang="en"] .mnav-ul a{font-family:var(--f-ui)}
 })();
 </script>
 <script>
+/* draw the video phone onto a canvas, clipped to the phone outline, so no browser shows the recording's grey backdrop */
+(function(){[].forEach.call(document.querySelectorAll('.pjvid .pjvp-c'),function(box){
+  var v=box.querySelector('video');if(!v)return;
+  var c=document.createElement('canvas');box.insertBefore(c,v.nextSibling);var x=c.getContext('2d');if(!x)return;
+  var SX=204,SY=46.5,SW=309.5,SH=631,R=50,raf=0;
+  function size(){var r=box.getBoundingClientRect(),d=Math.min(window.devicePixelRatio||1,2);c.width=Math.max(1,Math.round(r.width*d));c.height=Math.max(1,Math.round(r.height*d))}
+  function draw(){if(v.readyState<2)return;var w=c.width,h=c.height,rx=R/SW*w,ry=R/SH*h;x.clearRect(0,0,w,h);x.save();x.beginPath();
+    x.moveTo(rx,0);x.lineTo(w-rx,0);x.ellipse(w-rx,ry,rx,ry,0,-Math.PI/2,0);x.lineTo(w,h-ry);x.ellipse(w-rx,h-ry,rx,ry,0,0,Math.PI/2);x.lineTo(rx,h);x.ellipse(rx,h-ry,rx,ry,0,Math.PI/2,Math.PI);x.lineTo(0,ry);x.ellipse(rx,ry,rx,ry,0,Math.PI,Math.PI*1.5);x.closePath();x.clip();
+    try{x.drawImage(v,SX,SY,SW,SH,0,0,w,h);box.classList.add('cv-on')}catch(e){}x.restore()}
+  function loop(){draw();if(!v.paused&&!v.ended)raf=requestAnimationFrame(loop);else raf=0}
+  v.addEventListener('play',function(){if(!raf)loop()});
+  ['loadeddata','seeked','pause'].forEach(function(e){v.addEventListener(e,draw)});
+  size();addEventListener('resize',function(){size();draw()});if(window.ResizeObserver)new ResizeObserver(function(){size();draw()}).observe(box);
+  draw();
+})})();
+</script>
+<script>
 /* 下篇 thumbnail video: play only while visible */
 (function(){[].forEach.call(document.querySelectorAll('.pjvid video'),function(v){
   var reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;if(reduce)return;
@@ -1166,7 +1246,7 @@ html[lang="en"] .mnav-ul a{font-family:var(--f-ui)}
   if('IntersectionObserver' in window)new IntersectionObserver(function(es){if(es[0].isIntersecting){v.playbackRate=1.25;var p=v.play();if(p&&p.catch)p.catch(function(){})}else v.pause()},{threshold:.35}).observe(v.parentNode);
 })})();
 </script>
-<script type="application/json" id="i18n">{"__title": "Liya Lin Portfolio", "產品設計師": "Product Designer", "網站導覽": "Site navigation", "作品": "Work", "關於": "About", "履歷": "Résumé", "寄信給我": "Email me", "下載履歷": "Download résumé", "/* Hi, 我是 Liya Lin */": "/* Hi, I'm Liya Lin */", "為了相信而去質疑，設計讓生活更舒適友善的產品": "I question things so I can believe in them, and design products that make life easier", "我是一名 UX/UI 設計師，也是": "I'm a UX/UI designer, an", "IG 創作者": "IG creator", "與": " and a", "。從使用者研究出發，把觀察到的問題轉成可驗證的設計，再用測試數據確認它真的有幫助。": ". I start from user research, turn what I observe into designs I can test, and use the data to confirm they actually help.", "查看作品": "See my work", "了解 Liya": "About Liya", "角色": "Role", "UX/UI 設計師": "UX/UI Designer", "擅長": "Strengths", "使用者研究、原型設計、易用性測試": "User research, prototyping, usability testing", "工具": "Tools", "Figma、Maze、Miro、Notion": "Figma, Maze, Miro, Notion", "其他身分": "Also", "IG 創作者・Podcaster": "IG creator · Podcaster", "/* UX/UI 專案 */": "/* UX/UI Projects */", "Subway 線上點餐系統": "Subway online ordering", "幫助使用者找到想要的餐點搭配並完成點餐的 iOS 點餐系統。案例分為上下兩篇：先研究與設計，再用兩輪易用性測試驗證並迭代。": "An iOS ordering app that helps people find the sandwich they want and finish their order. The case study comes in two parts: research and design first, then two rounds of usability testing to validate and iterate.", "查看研究＆設計：探索到原型": "View Research & Design", "查看 Subway 案例上篇：研究＆設計": "View the Subway case, part 1: Research & Design", "使用者研究": "User research", "人物誌": "Personas", "原型設計": "Prototyping", "Subway App・研究與設計": "Subway App · Research & Design", "從 80 份問卷與 5 位用戶訪談，找出外食族點餐時的痛點，設計出四大核心功能。": "80 surveys and 5 user interviews revealed where people who eat out struggle when ordering, and led to four core features.", "查看易用性測試：兩輪迭代結果": "View Usability Testing", "查看 Subway 案例下篇：易用性測試": "View the Subway case, part 2: Usability Testing", "/* 功能 2・第二次迭代 */": "/* Feature 2 · Iteration 2 */", "建議熱量條": "Calorie guide bar", "易用性測試": "Usability testing", "迭代設計": "Iteration", "Subway App・易用性測試": "Subway App · Usability Testing", "兩輪 Maze 遠距測試，依用戶回饋迭代介面，可用性評分（SUS）從 55 提升至 75。": "Two rounds of remote Maze testing. Iterating on user feedback raised the usability score (SUS) from 55 to 75.", "/* 我喜歡做的事 */": "/* What I like to do */", "從研究、發想到原型": "From research to ideas to prototypes", "每個專案都依這三個階段推進，前一階段的發現就是下一階段的依據。": "Every project moves through these three stages, and what one stage finds becomes the basis for the next.", "報表與放大鏡插圖": "Illustration of a report and magnifying glass", "洞察力 / 觀察": "Insight / Observation", "定量問卷調查": "Surveys", "定性訪談": "Interviews", "親和圖": "Affinity mapping", "燈泡插圖": "Light bulb illustration", "概念發想": "Ideation", "激發創意 / 敏捷設計 / 收斂": "Diverge / Agile / Converge", "頭腦風暴": "Brainstorming", "功能比較": "Feature comparison", "手機線框插圖": "Phone wireframe illustration", "原型製作": "Prototyping", "迭代 / 易用性": "Iteration / Usability", "資訊架構": "Information architecture", "使用者流程": "User flows", "線框與原型": "Wireframes & prototypes", "一起聊聊你的產品、設計職缺或合作機會": "Let's talk about your product, a design role or a collaboration", "一起聊聊": "Let's talk", "你的產品|設計職缺|合作機會": "your product|a design role|a project", "你的產品": "your product", "回到作品集主頁": "Back to portfolio home", "產品設計師 · 為了相信而去質疑 · 2026 年更新": "Product Designer · Question to believe · Updated 2026", "即時熱量 202 kcal": "Live calories: 202 kcal", "依序選擇配料": "Pick toppings step by step", "已選內容一目了然": "See your picks at a glance", "加入購物車": "Add to cart", "概覽": "Overview", "返回": "Back", "聯絡": "Contact", "/* 功能 2・建議熱量條 */": "/* Feature 2 · Calorie guide bar */", "加了醬料，熱量到底多少？": "Added sauce. How many calories now?", "自選時看不到熱量，難在美味與體態間取得平衡": "Without calories in view, it's hard to balance taste and diet", "/* 第二次迭代 */": "/* Iteration 2 */", "配料增減，熱量即時更新": "Calories update with every topping", "點得安心，吃得開心": "Order with confidence, eat with joy", "網站選單": "Site menu", "關閉選單": "Close menu", "開啟選單": "Open menu", "首頁": "Index", "Liya 的作品集": "Liya's Portfolio", "成功加入購物車": "Added to cart", "/* 我能帶來的價值 */": "/* What I bring */", "從釐清問題、設計，到做出能上線的成品": "From framing the problem and designing, to building something that ships", "適合 UI/UX 設計師、Design Builder 與產品經理（PM）相關職位。如果你在找能一路從研究走到可互動原型的夥伴，這是我能帶來的：": "A fit for UI/UX designer, design builder and product manager roles. If you need someone who can go from research all the way to an interactive prototype, here's what I bring:", "把複雜的流程，變成一看就會用的介面": "Turning complex flows into interfaces people get right away", "從研究找出真正的卡點，再用測試數據證明設計有效。": "I find the real sticking points through research, then prove the design works with test data.", "Subway 點餐 App：可用性評分 SUS 55 → 75": "Subway ordering app: usability score (SUS) 55 → 75", "建置 Figma 元件庫與 Design Guideline，涵蓋 Desktop、iOS、Android": "Built a Figma component library and design guidelines across desktop, iOS and Android", "不只畫設計稿，直接做出能動的成品": "Not just mockups: I build things that actually work", "用 Claude、Gemini 等 AI 工具，把設計快速做成可以點、可以測的原型和網頁，討論不再停在靜態稿。": "With AI tools like Claude and Gemini, I turn designs into clickable, testable prototypes and web pages quickly, so discussions move past static screens.", "這個作品集的互動、動畫與中英切換，由我和 AI 協作完成": "This portfolio's interactions, animations and language toggle were built by me working with AI", "Figma 互動原型與 Webflow 網站上線經驗": "Shipped interactive Figma prototypes and a live Webflow site", "先想清楚做什麼，再決定怎麼做": "Decide what to build before deciding how", "用使用者影響與商業價值排序需求，和 PM、工程一起對齊範圍與優先順序。": "I rank requests by user impact and business value, and align scope and priorities with PMs and engineers.", "以四象限圖與峰終定律收斂功能，選出最有效益的方向": "Narrowed features with an impact matrix and the peak-end rule to pick the highest-value direction", "優化設計交付流程，降低與工程團隊的溝通成本": "Streamlined design handoff to cut back-and-forth with engineering", "把專業的事，說成大家都懂的話": "Explaining expert topics in words everyone gets", "每週經營 IG「人生招財貓」，用插畫把理財知識畫成好懂的小故事；同樣的能力用在對齊團隊與說服利害關係人。": "Every week on my IG “Lucky Cat Life” I turn personal-finance ideas into simple illustrated stories. I use the same skill to align teams and win over stakeholders.", "建築系出身，習慣從實地觀察與使用情境出發": "Trained in architecture, so I start from on-site observation and real use", "曾共同主持 Podcast @地下事，分享產業觀察": "Co-hosted the podcast @地下事, sharing industry observations"}</script>
+<script type="application/json" id="i18n">{"__title": "Liya Lin Portfolio", "產品設計師": "Product Designer", "網站導覽": "Site navigation", "作品": "Work", "關於": "About", "履歷": "Résumé", "寄信給我": "Email me", "下載履歷": "Download résumé", "/* Hi, 我是 Liya Lin */": "/* Hi, I'm Liya Lin */", "為了相信而去質疑，設計讓生活更舒適友善的產品": "I question things so I can believe in them, and design products that make life easier", "IG 創作者": "IG creator", "與": " and a", "查看作品": "See my work", "了解 Liya": "About Liya", "角色": "Role", "UX/UI 設計師": "UX/UI Designer", "擅長": "Strengths", "使用者研究、原型設計、易用性測試": "User research, prototyping, usability testing", "工具": "Tools", "Figma、Maze、Miro、Notion": "Figma, Maze, Miro, Notion", "其他身分": "Also", "IG 創作者・Podcaster": "IG creator · Podcaster", "查看研究＆設計：探索到原型": "View Research & Design", "查看 Subway 案例上篇：研究＆設計": "View the Subway case, part 1: Research & Design", "使用者研究": "User Research", "人物誌": "Personas", "原型設計": "Prototyping", "Subway App・研究與設計": "Subway App · Research & Design", "從 80 份問卷與 5 位用戶訪談，找出外食族點餐時的痛點，設計出四大核心功能。": "80 surveys and 5 user interviews revealed where people who eat out struggle when ordering, and led to four core features.", "查看易用性測試：兩輪迭代結果": "View Usability Testing", "查看 Subway 案例下篇：易用性測試": "View the Subway case, part 2: Usability Testing", "/* 功能 2・第二次迭代 */": "/* Feature 2 · Iteration 2 */", "建議熱量條": "Calorie guide bar", "易用性測試": "Usability Testing", "Subway App・易用性測試": "Subway App · Usability Testing", "兩輪 Maze 遠距測試，依用戶回饋迭代介面，可用性評分（SUS）從 55 提升至 75。": "Two rounds of remote Maze testing. Iterating on user feedback raised the usability score (SUS) from 55 to 75.", "/* 我喜歡做的事 */": "/* What I like to do */", "從研究、發想到原型": "From research to ideas to prototypes", "每個專案都依這三個階段推進，前一階段的發現就是下一階段的依據。": "Every project moves through these three stages, and what one stage finds becomes the basis for the next.", "報表與放大鏡插圖": "Illustration of a report and magnifying glass", "洞察力 / 觀察": "Insight / Observation", "定量問卷調查": "Surveys", "定性訪談": "Interviews", "親和圖": "Affinity mapping", "燈泡插圖": "Light bulb illustration", "概念發想": "Ideation", "激發創意 / 敏捷設計 / 收斂": "Diverge / Agile / Converge", "頭腦風暴": "Brainstorming", "功能比較": "Feature comparison", "手機線框插圖": "Phone wireframe illustration", "原型製作": "Prototyping", "迭代 / 易用性": "Iteration / Usability", "資訊架構": "Information architecture", "使用者流程": "User flows", "線框與原型": "Wireframes & prototypes", "一起聊聊你的產品、設計職缺或合作機會": "Let's talk about your product, a design role or a collaboration", "一起聊聊": "Let's talk", "你的產品|設計職缺|合作機會": "your product|a design role|a project", "你的產品": "your product", "回到作品集主頁": "Back to portfolio home", "產品設計師 · 為了相信而去質疑 · 2026 年更新": "Product Designer · Question to believe · Updated 2026", "即時熱量 202 kcal": "Live calories: 202 kcal", "依序選擇配料": "Pick toppings step by step", "已選內容一目了然": "See your picks at a glance", "加入購物車": "Add to cart", "概覽": "Overview", "返回": "Back", "聯絡": "Contact", "/* 功能 2・建議熱量條 */": "/* Feature 2 · Calorie guide bar */", "加了醬料，熱量到底多少？": "Added sauce. How many calories now?", "自選時看不到熱量，難在美味與體態間取得平衡": "Without calories in view, it's hard to balance taste and diet", "/* 第二次迭代 */": "/* Iteration 2 */", "配料增減，熱量即時更新": "Calories update with every topping", "點得安心，吃得開心": "Order with confidence, eat with joy", "網站選單": "Site menu", "關閉選單": "Close menu", "開啟選單": "Open menu", "首頁": "Index", "Liya 的作品集": "Liya's Portfolio", "成功加入購物車": "Added to cart", "/* 我能帶來的價值 */": "/* What I bring */", "Figma 互動原型與 Webflow 網站上線經驗": "Shipped interactive Figma prototypes and a live Webflow site", "先想清楚做什麼，再決定怎麼做": "Decide what to build before deciding how", "UX/UI 設計師，也是": "UX/UI designer, also an", "從釐清問題，到做出能上線的成品": "From framing the problem to shipping the product", "適合 UI/UX 設計師、Design Builder、產品經理（PM）職位。": "A fit for UI/UX designer, design builder and product manager (PM) roles.", "讓複雜流程一看就懂": "Complex flows, made obvious", "從研究找出卡點，用測試數據證明有效。": "Research finds the friction; test data proves the fix.", "Subway 點餐 App 可用性評分 SUS 55 → 75": "Subway ordering app: usability score (SUS) 55 → 75", "建立三端共用的 Figma 元件庫與設計指南": "Built a Figma component library and design guide for three platforms", "把設計直接做成能動的成品": "Designs turned into working products", "這個作品集由我與 AI 協作完成": "Built this portfolio together with AI", "依使用者影響與商業價值排序，與 PM、工程對齊。": "Prioritize by user impact and business value, aligned with PMs and engineers.", "用四象限圖與峰終定律收斂功能": "Narrowed features with an impact matrix and the peak-end rule", "優化交付流程，減少與工程來回溝通": "Streamlined handoff to cut back-and-forth with engineering", "把專業說成大家都懂的話": "Making expert topics easy to grasp", "經營 IG「人生招財貓」，用插畫講理財；同樣的能力用來對齊團隊。": "On my IG “Lucky Cat Life” I explain personal finance with illustrations; the same skill helps me align teams.", "建築系出身，從實地觀察與使用情境出發": "Architecture background: I start from on-site observation and real use", "共同主持 Podcast @地下事": "Co-hosted the podcast @地下事", "重製公司官網，客戶詢問表單填寫率提升 30%": "Rebuilt the company website, lifting inquiry-form completion by 30%", "這個作品集從設計到上線，由我與 AI 完成": "Designed and shipped this portfolio together with AI", "經營 IG「人生招財貓」用插畫講理財，同樣的能力用來對齊團隊。": "On my IG “Lucky Cat Life” I explain personal finance with illustrations; the same skill helps me align teams.", "把研究整理成人物誌與旅程圖，讓團隊快速對齊": "Turned research into personas and journey maps so teams align fast", "為了相信而去質疑，": "I question things so I can believe in them,", "設計讓生活更舒適友善的產品": " and design products that make life easier", "。": ".", "從研究找出問題、用設計解決，再用數據驗證。": " I find problems through research, solve them with design, and prove it with data.", "讓複雜流程變得一看就懂": "Making complex flows easy to understand", "用建築系養成的觀察習慣找出卡點，再用測試數據證明設計有效。": "I spot friction with the observation habits of an architect, then prove the design works with test data.", "設計稿之外，直接做出能用的成品": "Beyond mockups, I build what works", "用 Claude、Gemini 把設計做成可點、可測的原型與網頁，讓討論更快落地。": "I use Claude and Gemini to turn designs into clickable, testable prototypes and sites, so decisions land faster.", "依使用者影響與商業價值排序需求；曾以唯一設計師身分推動 3 個產品。": "I prioritize by user impact and business value, and have led 3 products as a team's only designer.", "/* 專案 */": "/* Projects */", "線框圖": "Wireframing", "UI 設計": "UI Design", "行動裝置設計": "Mobile Design"}</script>
 <script>
 /* 中 / EN toggle: swaps every translated text node and attribute in place.
    The language travels between portfolio pages in the link hash (#en or #en-section). */
